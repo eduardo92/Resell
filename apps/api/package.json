@@ -12,10 +12,11 @@
     },
     "dependencies": {
         "@azure/functions": "^4.0.0",
+        "apify-client": "^2.22.1",
         "dotenv": "^16.0.0"
     },
     "devDependencies": {
-        "typescript": "^4.0.0",
-        "@types/node": "18.x"
+        "@types/node": "18.x",
+        "typescript": "^4.0.0"
     }
 }
