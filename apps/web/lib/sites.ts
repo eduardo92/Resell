@@ -16,6 +16,8 @@ export interface SiteConfig {
         contactPhone: string;
     };
     hasExistingWebsite: boolean;
+    status: 'nuevo' | 'generando' | 'listo' | 'contactado' | 'vendido';
+    lastUpdated: string;
 }
 
 // MOCK DATABASE
@@ -34,7 +36,9 @@ const MOCK_DB: Record<string, SiteConfig> = {
             contactEmail: 'hola@tacoselprimo.com',
             contactPhone: '555-0123'
         },
-        hasExistingWebsite: false
+        hasExistingWebsite: false,
+        status: 'listo',
+        lastUpdated: new Date().toISOString()
     },
     'plomeria-garcia': {
         slug: 'plomeria-garcia',
@@ -49,7 +53,9 @@ const MOCK_DB: Record<string, SiteConfig> = {
             contactEmail: 'contacto@plomeriagarcia.com',
             contactPhone: '555-9876'
         },
-        hasExistingWebsite: true
+        hasExistingWebsite: true,
+        status: 'nuevo',
+        lastUpdated: new Date().toISOString()
     },
     'mariscos-reny': {
         slug: 'mariscos-reny',
@@ -64,17 +70,31 @@ const MOCK_DB: Record<string, SiteConfig> = {
             contactEmail: 'contacto@mariscosreny.com',
             contactPhone: 'Océano Atlántico 131, Lindavista'
         },
-        hasExistingWebsite: false
+        hasExistingWebsite: false,
+        status: 'listo',
+        lastUpdated: new Date().toISOString()
     }
 };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+
 export async function getSiteData(slug: string): Promise<SiteConfig | null> {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return MOCK_DB[slug] || null;
+    try {
+        const res = await fetch(`${API_URL}/getSites`);
+        const sites: SiteConfig[] = await res.json();
+        return sites.find(s => s.slug === slug) || null;
+    } catch (error) {
+        console.error('Error fetching site data:', error);
+        return null;
+    }
 }
 
 export async function getAllSites(): Promise<SiteConfig[]> {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    return Object.values(MOCK_DB);
+    try {
+        const res = await fetch(`${API_URL}/getSites`);
+        return await res.json();
+    } catch (error) {
+        console.error('Error fetching all sites:', error);
+        return [];
+    }
 }

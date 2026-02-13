@@ -1,6 +1,7 @@
-
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { ApifyScraperService } from "../services/apifyScraper";
+import { CosmosDbService } from "../services/cosmosDb";
+import { slugify } from "../utils/slugify";
 
 export async function findLeads(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Find Leads triggered: ${request.url}`);
@@ -31,7 +32,32 @@ export async function findLeads(request: HttpRequest, context: InvocationContext
 
         context.log(`Found ${newLeads.length} leads, ${deduplicated.length} after deduplication.`);
 
-        // TODO: Save deduplicated leads to DB
+        const db = CosmosDbService.getInstance();
+
+        // Save leads as initial SiteConfig objects with 'nuevo' status
+        const savePromises = deduplicated.map(lead => {
+            const slug = slugify(lead.name);
+            return db.upsertSite({
+                id: slug,
+                slug: slug,
+                businessName: lead.name,
+                templateId: lead.category?.toLowerCase().includes('rest') ? 'restaurant-v1' : 'generic-v1',
+                colors: { primary: '#6366f1', secondary: '#f8fafc' }, // Default colors
+                content: {
+                    heroTitle: lead.name,
+                    heroSubtitle: lead.category || 'Negocio Local',
+                    aboutText: lead.description || 'Impulsamos tu negocio con tecnología.',
+                    services: [lead.category || 'Servicio Profesional'],
+                    contactEmail: lead.website || '',
+                    contactPhone: lead.phone || lead.address || ''
+                },
+                hasExistingWebsite: !!lead.website,
+                status: 'nuevo',
+                lastUpdated: new Date().toISOString()
+            });
+        });
+
+        await Promise.all(savePromises);
 
         return {
             status: 200,

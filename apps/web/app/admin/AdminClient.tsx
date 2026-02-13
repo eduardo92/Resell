@@ -24,15 +24,39 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
 
             if (response.ok) {
                 const data = await response.json();
-                // For MVP, we'll just alert or show them.
-                // In a real DB setup, we'd refetch or update state.
+                // Merge new leads into local state or refetch
                 alert(`¡Éxito! Encontrados ${data.count} prospectos nuevos.`);
+                // In a real app, we'd probably re-render with new data
+                window.location.reload();
             } else {
                 alert('Error al raspar prospectos. Verifica tu API Key.');
             }
         } catch (error) {
             console.error(error);
             alert('Error de conexión.');
+        } finally {
+            setIsScraping(false);
+        }
+    };
+
+    const handleGenerate = async (lead: any) => {
+        setIsScraping(true); // Reusing loading state
+        try {
+            const response = await fetch('/api/generateSite', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(lead),
+            });
+
+            if (response.ok) {
+                const site = await response.json();
+                alert(`¡Sitio generado para ${site.businessName}!`);
+                window.location.reload();
+            } else {
+                alert('Error al generar sitio con AI.');
+            }
+        } catch (error) {
+            console.error(error);
         } finally {
             setIsScraping(false);
         }
@@ -111,20 +135,30 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
                                             <div className="text-xs text-gray-400 font-medium">{site.content.contactEmail}</div>
                                         </td>
                                         <td className="px-8 py-6">
-                                            <Link href={`/sites/${site.slug}`} target="_blank" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
-                                                <Globe size={14} /> /{site.slug}
-                                            </Link>
+                                            <div className="flex flex-col gap-1">
+                                                <Link href={`/sites/${site.slug}`} target="_blank" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
+                                                    <Globe size={14} /> /{site.slug}
+                                                </Link>
+                                                <span className="text-[10px] text-gray-400 uppercase font-bold">
+                                                    Actualizado: {new Date(site.lastUpdated).toLocaleDateString()}
+                                                </span>
+                                            </div>
                                         </td>
                                         <td className="px-8 py-6">
-                                            {site.hasExistingWebsite ? (
-                                                <span className="text-[10px] font-black bg-red-50 text-red-500 px-3 py-1 rounded-lg border border-red-100">
-                                                    DESCARTADO
-                                                </span>
-                                            ) : (
-                                                <span className="text-[10px] font-black bg-green-50 text-green-500 px-3 py-1 rounded-lg border border-green-100">
-                                                    LISTO ✅
-                                                </span>
-                                            )}
+                                            <div className="flex flex-col gap-2">
+                                                {site.hasExistingWebsite ? (
+                                                    <span className="text-[10px] font-black bg-red-50 text-red-500 px-3 py-1 rounded-lg border border-red-100 inline-block w-fit">
+                                                        DESCARTADO
+                                                    </span>
+                                                ) : (
+                                                    <span className={`text-[10px] font-black px-3 py-1 rounded-lg border inline-block w-fit uppercase ${site.status === 'listo' ? 'bg-green-50 text-green-500 border-green-100' :
+                                                        site.status === 'nuevo' ? 'bg-blue-50 text-blue-500 border-blue-100' :
+                                                            'bg-gray-50 text-gray-500 border-gray-100'
+                                                        }`}>
+                                                        {site.status === 'listo' ? 'LISTO ✅' : site.status}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="px-8 py-6">
                                             <span className="text-[10px] font-black bg-gray-100 text-gray-500 px-3 py-1 rounded-lg uppercase">
@@ -132,9 +166,20 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
                                             </span>
                                         </td>
                                         <td className="px-8 py-6 text-right">
-                                            <button className="text-gray-400 hover:text-coral-500 font-bold text-sm transition">
-                                                Configurar
-                                            </button>
+                                            <div className="flex justify-end gap-2">
+                                                {site.status === 'nuevo' && !site.hasExistingWebsite && (
+                                                    <button
+                                                        onClick={() => handleGenerate(site)}
+                                                        disabled={isScraping}
+                                                        className="bg-coral-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-coral-600 transition disabled:opacity-50"
+                                                    >
+                                                        {isScraping ? '...' : 'GENERAR'}
+                                                    </button>
+                                                )}
+                                                <button className="text-gray-400 hover:text-coral-500 font-bold text-sm transition">
+                                                    Configurar
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
