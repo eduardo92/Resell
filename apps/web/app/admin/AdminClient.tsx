@@ -9,24 +9,23 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
     const [sites, setSites] = useState(initialSites);
     const [niche, setNiche] = useState('');
     const [location, setLocation] = useState('');
+    const [businessUrl, setBusinessUrl] = useState('');
     const [isScraping, setIsScraping] = useState(false);
 
     const handleScrape = async () => {
-        if (!niche || !location) return;
+        if (!businessUrl && (!niche || !location)) return;
         setIsScraping(true);
 
         try {
             const response = await fetch('/api/findLeads', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ niche, location }),
+                body: JSON.stringify({ niche, location, url: businessUrl }),
             });
 
             if (response.ok) {
                 const data = await response.json();
-                // Merge new leads into local state or refetch
                 alert(`¡Éxito! Encontrados ${data.count} prospectos nuevos.`);
-                // In a real app, we'd probably re-render with new data
                 window.location.reload();
             } else {
                 alert('Error al raspar prospectos. Verifica tu API Key.');
@@ -36,6 +35,7 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
             alert('Error de conexión.');
         } finally {
             setIsScraping(false);
+            setBusinessUrl('');
         }
     };
 
@@ -77,34 +77,47 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
                 {/* Scraper Tool Card */}
                 <div className="bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 mb-12 border border-gray-100">
                     <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                        <Search size={20} className="text-coral-500" /> Nueva Sesión de Scraping (Apify)
+                        <Search size={20} className="text-coral-500" /> Nuevo Prospecto (Google Maps)
                     </h2>
-                    <div className="flex flex-col md:flex-row gap-4">
-                        <input
-                            type="text"
-                            placeholder="Nicho (ej. Plomeros, Restaurantes)"
-                            value={niche}
-                            onChange={(e) => setNiche(e.target.value)}
-                            className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-coral-500 transition"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Ciudad (ej. León, CDMX)"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                            className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-coral-500 transition"
-                        />
-                        <button
-                            onClick={handleScrape}
-                            disabled={isScraping || !niche || !location}
-                            className="bg-coral-500 hover:bg-coral-600 disabled:opacity-50 text-white font-bold px-10 py-4 rounded-2xl transition-all shadow-lg shadow-coral-500/20 flex items-center justify-center gap-3 min-w-[200px]"
-                        >
-                            {isScraping ? (
-                                <><Loader2 className="animate-spin" /> Raspando...</>
-                            ) : (
-                                'Iniciar Scraping 🚀'
-                            )}
-                        </button>
+
+                    <div className="space-y-6">
+                        <div className="flex flex-col md:flex-row gap-4">
+                            <input
+                                type="text"
+                                placeholder="Nicho (ej. Plomeros, Restaurantes)"
+                                value={niche}
+                                onChange={(e) => setNiche(e.target.value)}
+                                className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-coral-500 transition"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Ciudad (ej. León, CDMX)"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                                className="flex-1 bg-gray-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-coral-500 transition"
+                            />
+                        </div>
+
+                        <div className="flex flex-col md:flex-row gap-4">
+                            <input
+                                type="text"
+                                placeholder="O pega el URL de Google Maps para UN solo negocio"
+                                value={businessUrl}
+                                onChange={(e) => setBusinessUrl(e.target.value)}
+                                className="flex-[2] bg-gray-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-coral-500 transition"
+                            />
+                            <button
+                                onClick={handleScrape}
+                                disabled={isScraping || (!businessUrl && (!niche || !location))}
+                                className="bg-coral-500 hover:bg-coral-600 disabled:opacity-50 text-white font-bold px-10 py-4 rounded-2xl transition-all shadow-lg shadow-coral-500/20 flex items-center justify-center gap-3 min-w-[200px]"
+                            >
+                                {isScraping ? (
+                                    <><Loader2 className="animate-spin" /> Procesando...</>
+                                ) : (
+                                    'Iniciar Scraping 🚀'
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -174,6 +187,14 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
                                                         className="bg-coral-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-coral-600 transition disabled:opacity-50"
                                                     >
                                                         {isScraping ? '...' : 'GENERAR'}
+                                                    </button>
+                                                )}
+                                                {site.status === 'listo' && (
+                                                    <button
+                                                        onClick={() => alert('Próximamente: Mejora este sitio con planes Premium (Plan de Pagos).')}
+                                                        className="bg-black text-white text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-gray-800 transition"
+                                                    >
+                                                        PREMIUM ⭐
                                                     </button>
                                                 )}
                                                 <button className="text-gray-400 hover:text-coral-500 font-bold text-sm transition">

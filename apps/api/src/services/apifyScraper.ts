@@ -50,6 +50,37 @@ export class ApifyScraperService {
         }
     }
 
+    async scrapeSingleUrl(url: string): Promise<ScrapedBusiness | null> {
+        const input = {
+            startUrls: [{ url }],
+            maxPagesPerQuery: 1,
+            maxItemsPerQuery: 1,
+            language: "es",
+        };
+
+        try {
+            const run = await this.client.actor("compass/google-maps-scraper").call(input);
+            const { items } = await this.client.dataset(run.defaultDatasetId).listItems();
+
+            if (items.length === 0) return null;
+
+            const item: any = items[0];
+            return {
+                name: item.title,
+                category: item.categoryName,
+                address: item.address,
+                phone: item.phone,
+                website: item.website,
+                description: item.description,
+                reviewsCount: item.reviewsCount,
+                rating: item.totalScore,
+            };
+        } catch (error) {
+            console.error('Error scraping single URL:', error);
+            throw error;
+        }
+    }
+
     /**
      * Deduplicates leads based on name and address.
      */

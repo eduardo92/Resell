@@ -8,10 +8,10 @@ export async function findLeads(request: HttpRequest, context: InvocationContext
 
     try {
         const body = await request.json() as any;
-        const { niche, location } = body;
+        const { niche, location, url } = body;
 
-        if (!niche || !location) {
-            return { status: 400, body: "Niche and Location are required." };
+        if (!url && (!niche || !location)) {
+            return { status: 400, body: "Niche and Location OR Business URL are required." };
         }
 
         const apiKey = process.env.APIFY_API_KEY;
@@ -21,18 +21,24 @@ export async function findLeads(request: HttpRequest, context: InvocationContext
         }
 
         const scraper = new ApifyScraperService(apiKey);
+        let leads: any[] = [];
 
-        // MOCK: In a real scenario, we'd fetch existing leads from DB for deduplication
-        const existingLeads: any[] = [];
-
-        context.log(`Scraping ${niche} in ${location}...`);
-        const newLeads = await scraper.findLeads(niche, location);
-
-        const deduplicated = scraper.deduplicateLeads(newLeads, existingLeads);
-
-        context.log(`Found ${newLeads.length} leads, ${deduplicated.length} after deduplication.`);
+        if (url) {
+            context.log(`Scraping single business URL: ${url}`);
+            const lead = await scraper.scrapeSingleUrl(url);
+            if (lead) leads = [lead];
+        } else {
+            context.log(`Scraping niche ${niche} in ${location}...`);
+            leads = await scraper.findLeads(niche, location);
+        }
 
         const db = CosmosDbService.getInstance();
+        const existingResources = await db.getAllSites();
+        const existingLeads = existingResources.map(r => ({ name: r.businessName, address: r.content.contactPhone || '' }));
+
+        const deduplicated = scraper.deduplicateLeads(leads, existingLeads as any);
+
+        context.log(`Found ${leads.length} leads, ${deduplicated.length} after deduplication.`);
 
         // Save leads as initial SiteConfig objects with 'nuevo' status
         const savePromises = deduplicated.map(lead => {
