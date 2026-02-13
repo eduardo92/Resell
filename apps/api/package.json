@@ -1,0 +1,21 @@
+{
+    "name": "localclaw-api",
+    "version": "1.0.0",
+    "description": "Azure Functions API for LocalClaw",
+    "main": "dist/src/functions/*.js",
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc -w",
+        "prestart": "npm run build",
+        "start": "func start",
+        "test": "echo \"No tests yet...\""
+    },
+    "dependencies": {
+        "@azure/functions": "^4.0.0",
+        "dotenv": "^16.0.0"
+    },
+    "devDependencies": {
+        "typescript": "^4.0.0",
+        "@types/node": "18.x"
+    }
+}
