@@ -101,7 +101,7 @@ export default function Home() {
           </div>
           <p className="text-gray-500 mb-8">© 2026 LocalClaw. Hecho con ❤️ para emprendedores Mexicanos.</p>
           <div className="flex justify-center gap-6 text-sm text-gray-400">
-            <Link href="/sites/mariscos-reny" className="hover:text-white">Ver Ejemplo: Mariscos Reny</Link>
+            <Link href="/sites/view?slug=mariscos-reny" className="hover:text-white">Ver Ejemplo: Mariscos Reny</Link>
             <Link href="/admin" className="hover:text-white">Admin Dashboard</Link>
           </div>
         </div>

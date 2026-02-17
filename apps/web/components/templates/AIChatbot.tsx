@@ -20,25 +20,25 @@ export function AIChatbot({ site }: { site: SiteConfig }) {
         setInput('');
         setIsTyping(true);
 
-        // MOCK AI RESPONSE
-        // In a real implementation, you would call /api/chat
-        setTimeout(() => {
-            let botResponse = '';
-            const lowMsg = userMessage.toLowerCase();
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage, siteConfig: site }),
+            });
 
-            if (lowMsg.includes('horario') || lowMsg.includes('abierto')) {
-                botResponse = `Estamos abiertos ahora. Normalmente atendemos de 10 AM a 8 PM.`;
-            } else if (lowMsg.includes('menu') || lowMsg.includes('carta') || lowMsg.includes('comida')) {
-                botResponse = `Nuestras especialidades son: ${site.content.services.join(', ')}. ¿Te gustaría saber más de alguno?`;
-            } else if (lowMsg.includes('ubicacion') || lowMsg.includes('donde') || lowMsg.includes('direccion')) {
-                botResponse = `Nos encontramos en ${site.content.contactPhone}. ¡Te esperamos!`;
+            if (response.ok) {
+                const data = await response.json();
+                setMessages(prev => [...prev, { role: 'bot', content: data.reply }]);
             } else {
-                botResponse = `¡Qué buena pregunta! Como asistente de ${site.businessName}, te puedo decir que nos esforzamos por dar el mejor servicio. ¿Gustas que te ayude con algo más específico?`;
+                setMessages(prev => [...prev, { role: 'bot', content: 'Lo siento, tuve un problema de conexión. Por favor intenta de nuevo.' }]);
             }
-
-            setMessages(prev => [...prev, { role: 'bot', content: botResponse }]);
+        } catch (error) {
+            console.error(error);
+            setMessages(prev => [...prev, { role: 'bot', content: 'Ops, algo salió mal.' }]);
+        } finally {
             setIsTyping(false);
-        }, 1000);
+        }
     };
 
     return (
@@ -77,8 +77,8 @@ export function AIChatbot({ site }: { site: SiteConfig }) {
                             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div
                                     className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${msg.role === 'user'
-                                            ? 'bg-blue-600 text-white rounded-br-none'
-                                            : 'bg-white text-gray-800 rounded-bl-none border border-gray-100'
+                                        ? 'bg-blue-600 text-white rounded-br-none'
+                                        : 'bg-white text-gray-800 rounded-bl-none border border-gray-100'
                                         }`}
                                     style={msg.role === 'user' ? { backgroundColor: site.colors.secondary } : {}}
                                 >

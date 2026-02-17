@@ -1,12 +1,10 @@
 
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
-import OpenAI from "openai";
-import { CosmosDbService } from "../services/cosmosDb";
+import { SqlDbService } from "../services/sqlDb";
 import { slugify } from "../utils/slugify";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const DEFAULT_MODEL = "deepseek/deepseek-chat"; // Budget champion with incredible Spanish copy
 
 export async function generateSite(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Generate Site triggered: ${request.url}`);
@@ -20,40 +18,66 @@ export async function generateSite(request: HttpRequest, context: InvocationCont
         }
 
         const prompt = `
-            Eres un experto en marketing digital para el mercado mexicano.
-            Genera un archivo JSON de configuración para un sitio web de un negocio llamado "${businessName}".
+            Eres un Director Creativo de una agencia de diseño web de lujo en México.
+            Tu misión es crear una configuración maestra para un sitio web de un negocio llamado "${businessName}".
             Categoría: ${category || 'Negocio Local'}
             Descripción: ${description || 'Especialistas en su área'}
             Ubicación: ${address || 'México'}
             Teléfono: ${phone || ''}
 
-            El JSON debe tener exactamente esta estructura:
+            OBJETIVO VISUAL: El sitio debe verse moderno, premium y profesional.
+            
+            Genera un JSON con esta estructura exacta:
             {
                 "businessName": "${businessName}",
-                "templateId": "restaurant-v1" o "plumber-v1" o "generic-v1",
-                "colors": { "primary": "un color hex premium", "secondary": "un color hex complementario" },
+                "templateId": "restaurant-v1" | "plumber-v1" | "generic-v1",
+                "colors": { 
+                    "primary": "un color hex profundo y elegante acorde al nicho", 
+                    "secondary": "un color hex claro para fondos",
+                    "accent": "un color hex vibrante que resalte botones" 
+                },
+                "visuals": {
+                    "fontStyle": "minimalist" | "serif" | "modern" | "display",
+                    "theme": "light" | "dark" | "glass",
+                    "brandPersonality": "una descripción de la personalidad de la marca (ej: Elitista, Cercano, Técnico, Rebelde)",
+                    "toneOfVoice": "instrucciones de cómo debe hablar la marca (ej: 'Habla de usted, con mucha cortesía' o 'Usa lenguaje joven y dinámico')"
+                },
                 "content": {
-                    "heroTitle": "Un título corto y potente en español",
-                    "heroSubtitle": "Una frase que venda en español",
-                    "aboutText": "Una descripción profesional de 2-3 párrafos en español",
-                    "services": ["Servicio 1", "Servicio 2", "Servicio 3", "Servicio 4"],
+                    "heroTitle": "Un título corto y de altísimo impacto en español",
+                    "heroSubtitle": "Una frase persuasiva que genere confianza en español",
+                    "aboutText": "Una descripción cautivadora de 2 párrafos del negocio en español",
+                    "services": ["Servicio Premium 1", "Servicio Premium 2", "Servicio Premium 3", "Servicio Premium 4"],
                     "contactEmail": "contacto@${slugify(businessName)}.com",
                     "contactPhone": "${phone || 'Contactar por WhatsApp'}"
                 }
             }
-            Responde ÚNICAMENTE con el objeto JSON, sin texto adicional.
+            Responde exclusivamente con el JSON. No incluyas explicaciones.
         `;
 
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [{ role: "user", content: prompt }],
-            response_format: { type: "json_object" },
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://localclaw-mx.azurestaticapps.net",
+                "X-Title": "LocalClaw MX",
+            },
+            body: JSON.stringify({
+                model: DEFAULT_MODEL,
+                messages: [{ role: "user", content: prompt }],
+                response_format: { type: "json_object" }
+            })
         });
 
-        const config = JSON.parse(response.choices[0].message.content || "{}");
+        const data = await response.json();
+        if (!response.ok || !data.choices?.[0]?.message?.content) {
+            context.error('OpenRouter error:', JSON.stringify(data));
+            return { status: 502, body: `AI service error: ${data.error?.message || 'No response from model'}` };
+        }
+        const config = JSON.parse(data.choices[0].message.content || "{}");
         const slug = slugify(businessName);
 
-        const siteData = {
+        const siteConfig = {
             id: slug,
             slug: slug,
             ...config,
@@ -62,18 +86,20 @@ export async function generateSite(request: HttpRequest, context: InvocationCont
             lastUpdated: new Date().toISOString()
         };
 
-        const db = CosmosDbService.getInstance();
-        await db.upsertSite(siteData);
+        // Guardar en SQL
+        const db = SqlDbService.getInstance();
+        await db.initDatabase();
+        await db.upsertSite(siteConfig);
 
         return {
             status: 200,
-            jsonBody: siteData
+            jsonBody: siteConfig
         };
     } catch (error) {
         context.error('Error generating site:', error);
         return { status: 500, body: "Internal Server Error" };
     }
-};
+}
 
 app.http('generateSite', {
     methods: ['POST'],

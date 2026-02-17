@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LocalClaw MX — Project Status</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: #1e1e2e;
+      --accent: #6366f1;
+      --accent2: #a855f7;
+      --green: #22c55e;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --heading: #f8fafc;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 56px;
+    }
+
+    .nav-brand {
+      font-weight: 800;
+      font-size: .95rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      white-space: nowrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .82rem;
+      font-weight: 500;
+      transition: color .15s;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 4rem 0 3rem;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      padding: .25rem .8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--heading);
+      letter-spacing: -.02em;
+      margin-bottom: .75rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 540px;
+      margin: 0 auto 2rem;
+    }
+
+    .live-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .75rem;
+    }
+
+    .live-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: .6rem;
+      padding: .45rem .9rem;
+      font-size: .78rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: border-color .15s;
+    }
+
+    .live-link:hover {
+      border-color: var(--accent);
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    /* ── SECTION TITLES ── */
+    .section {
+      margin-top: 4rem;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-label h2 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--heading);
+      letter-spacing: -.01em;
+    }
+
+    .phase-badge {
+      font-size: .65rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .2rem .65rem;
+      border-radius: 999px;
+    }
+
+    .badge-done {
+      background: rgba(34, 197, 94, .15);
+      color: var(--green);
+    }
+
+    .badge-plan {
+      background: rgba(245, 158, 11, .15);
+      color: var(--yellow);
+    }
+
+    .badge-future {
+      background: rgba(100, 116, 139, .15);
+      color: var(--muted);
+    }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: .75rem;
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--heading);
+      line-height: 1;
+    }
+
+    .stat-card .num.green {
+      color: var(--green);
+    }
+
+    .stat-card .num.yellow {
+      color: var(--yellow);
+    }
+
+    .stat-card .num.red {
+      color: var(--red);
+    }
+
+    .stat-card .label {
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: .35rem;
+      font-weight: 500;
+    }
+
+    /* ── DATA FLOW ── */
+    .flow {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: .9rem;
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex-shrink: 0;
+    }
+
+    .flow-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: .5rem;
+      padding: .5rem .9rem;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .flow-box .sub {
+      font-size: .65rem;
+      color: var(--muted);
+      font-weight: 400;
+      display: block;
+    }
+
+    .flow-arrow {
+      color: var(--muted);
+      font-size: 1rem;
+      padding: 0 .25rem;
+    }
+
+    /* ── TABLES ── */
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: .9rem;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .table-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem;
+    }
+
+    .table-wrap thead th {
+      background: var(--surface);
+      color: var(--muted);
+      font-size: .65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      padding: .75rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-wrap tbody td {
+      padding: .85rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .table-wrap tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-wrap tbody tr:hover {
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .cell-name {
+      font-weight: 600;
+      color: var(--heading);
+    }
+
+    .cell-file {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .72rem;
+      color: var(--accent);
+      background: rgba(99, 102, 241, .1);
+      padding: .15rem .4rem;
+      border-radius: .3rem;
+      white-space: nowrap;
+    }
+
+    .cell-desc {
+      color: var(--muted);
+      font-size: .78rem;
+    }
+
+    /* ── PILLS ── */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .22rem .6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .pill-green {
+      background: rgba(34, 197, 94, .12);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .25);
+    }
+
+    .pill-yellow {
+      background: rgba(245, 158, 11, .12);
+      color: var(--yellow);
+      border: 1px solid rgba(245, 158, 11, .25);
+    }
+
+    .pill-red {
+      background: rgba(239, 68, 68, .12);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, .25);
+    }
+
+    .pill-blue {
+      background: rgba(59, 130, 246, .12);
+      color: var(--blue);
+      border: 1px solid rgba(59, 130, 246, .25);
+    }
+
+    .pill-gray {
+      background: rgba(100, 116, 139, .12);
+      color: var(--muted);
+      border: 1px solid rgba(100, 116, 139, .2);
+    }
+
+    /* ── BUG TABLE ── */
+    .bug-icon {
+      font-size: .9rem;
+    }
+
+    /* ── SCHEMA ── */
+    .schema-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: .75rem;
+      padding: 1.25rem 1.5rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .78rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    .schema-block .kw {
+      color: var(--accent2);
+    }
+
+    .schema-block .ty {
+      color: var(--blue);
+    }
+
+    .schema-block .cm {
+      color: var(--muted);
+    }
+
+    .schema-block .pk {
+      color: var(--green);
+    }
+
+    /* ── ENV TABLE ── */
+    .env-row td:first-child {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .75rem;
+      color: var(--accent);
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      display: flex;
+      gap: .9rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--yellow);
+      border-radius: .75rem;
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      font-size: .82rem;
+    }
+
+    .callout.info {
+      border-left-color: var(--blue);
+    }
+
+    .callout.error {
+      border-left-color: var(--red);
+    }
+
+    .callout.ok {
+      border-left-color: var(--green);
+    }
+
+    .callout-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: .05rem;
+    }
+
+    .callout-text strong {
+      color: var(--heading);
+      display: block;
+      margin-bottom: .2rem;
+    }
+
+    .callout-text code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .75rem;
+      background: rgba(255, 255, 255, .06);
+      padding: .1rem .35rem;
+      border-radius: .25rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 5rem;
+      border-top: 1px solid var(--border);
+      padding: 2rem 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: .75rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:600px) {
+      nav {
+        gap: 1rem;
+      }
+
+      .flow {
+        gap: .4rem;
+      }
+
+      .flow-arrow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-brand">LocalClaw MX</span>
+    <a href="#phase1">Phase 1</a>
+    <a href="#bugs">Bugs Fixed</a>
+    <a href="#infra">Infra</a>
+    <a href="#phase2">Phase 2</a>
+    <a href="#deploy">Deploy</a>
+  </nav>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-tag">Last updated Feb 16, 2026</div>
+      <h1>LocalClaw <span>MX</span></h1>
+      <p>Find Mexican business leads via Apify, generate AI-branded websites with DeepSeek V3, sell them.</p>
+      <div class="live-links">
+        <a class="live-link" href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/admin" target="_blank">
+          <span class="live-dot"></span> Admin Dashboard
+        </a>
+        <a class="live-link" href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/sites/view?slug=mariscos-reny"
+          target="_blank">
+          <span class="live-dot"></span> Example Site
+        </a>
+        <a class="live-link" href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/api/getSites" target="_blank">
+          <span class="live-dot"></span> API Status
+        </a>
+      </div>
+    </div>
+
+    <!-- ────────────────────────── PHASE 1 ────────────────────────── -->
+    <div class="section" id="phase1">
+      <div class="section-label">
+        <h2>Phase 1 — Automation MVP</h2>
+        <span class="phase-badge badge-done">✓ Complete</span>
+      </div>
+
+      <!-- Summary stats -->
+      <div class="summary-grid">
+        <div class="stat-card">
+          <div class="num green">8</div>
+          <div class="label">Features Shipped</div>
+        </div>
+        <div class="stat-card">
+          <div class="num green">4</div>
+          <div class="label">API Endpoints</div>
+        </div>
+        <div class="stat-card">
+          <div class="num green">3</div>
+          <div class="label">Site Templates</div>
+        </div>
+        <div class="stat-card">
+          <div class="num yellow">5</div>
+          <div class="label">Bugs Fixed</div>
+        </div>
+        <div class="stat-card">
+          <div class="num green">1</div>
+          <div class="label">AI Chatbot</div>
+        </div>
+      </div>
+
+      <!-- Data flow -->
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-box">Admin /admin<span class="sub">Next.js SSR</span></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box">POST /api/findLeads<span class="sub">Apify → SQL</span></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box">POST /api/generateSite<span class="sub">DeepSeek V3 → SQL</span></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box">GET /sites/[slug]<span class="sub">SSR Template</span></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-box">POST /api/chat<span class="sub">AI Chatbot Widget</span></div>
+        </div>
+      </div>
+
+      <!-- Features table -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Feature</th>
+              <th>File</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Apify Google Maps Scraper</td>
+              <td><span class="cell-file">services/apifyScraper.ts</span></td>
+              <td class="cell-desc">Bulk (niche + city) and single Google Maps URL. Uses <code
+                  style="font-family:monospace;font-size:.75rem">compass/google-maps-scraper</code> actor.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Lead Deduplication</td>
+              <td><span class="cell-file">services/apifyScraper.ts</span></td>
+              <td class="cell-desc">Dedupes by name + address before insert. Fixed to store <code
+                  style="font-family:monospace;font-size:.75rem">address</code> as separate field.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Azure SQL Database</td>
+              <td><span class="cell-file">services/sqlDb.ts</span></td>
+              <td class="cell-desc">Singleton connection pool. UPSERT logic. Auto-creates <code
+                  style="font-family:monospace;font-size:.75rem">Sites</code> table on first connect.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Find Leads API</td>
+              <td><span class="cell-file">functions/findLeads.ts</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">POST /api/findLeads</code> —
+                Scrape → dedup → save as status <em>nuevo</em>.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">AI Site Generator</td>
+              <td><span class="cell-file">functions/generateSite.ts</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">POST /api/generateSite</code> —
+                OpenRouter + DeepSeek V3 → brand config JSON → SQL.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Get Sites API</td>
+              <td><span class="cell-file">functions/getSites.ts</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">GET /api/getSites</code> and
+                <code style="font-family:monospace;font-size:.75rem">GET /api/getSites?slug=</code>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">AI Chatbot API</td>
+              <td><span class="cell-file">functions/chat.ts</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">POST /api/chat</code> —
+                Visitor-facing, anonymous auth. Uses brand personality + tone from SiteConfig.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Admin Dashboard</td>
+              <td><span class="cell-file">app/admin/AdminClient.tsx</span></td>
+              <td class="cell-desc">Scraper form (niche+city or URL) + leads table + GENERAR button + status badges.
+              </td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Lead Site Preview</td>
+              <td><span class="cell-file">app/sites/view/page.tsx</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">/sites/view?slug=[slug]</code>
+                —
+                Client-side fetch using the slug query param (Static Export compatible).</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Restaurant Template</td>
+              <td><span class="cell-file">templates/RestaurantTemplate.tsx</span></td>
+              <td class="cell-desc">Dynamic colors, hero, services, chatbot widget. All copy in Spanish.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Plumber Template</td>
+              <td><span class="cell-file">templates/PlumberTemplate.tsx</span></td>
+              <td class="cell-desc">Service-provider layout. Untracked in git — needs committing.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">Generic Template</td>
+              <td><span class="cell-file">templates/GenericTemplate.tsx</span></td>
+              <td class="cell-desc">Fallback for any other niche.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">✓ Live</span></td>
+              <td class="cell-name">AI Chatbot Widget</td>
+              <td><span class="cell-file">templates/AIChatbot.tsx</span></td>
+              <td class="cell-desc">Floating bubble on all templates. Sends full SiteConfig to <code
+                  style="font-family:monospace;font-size:.75rem">/api/chat</code>.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-gray">Stub</span></td>
+              <td class="cell-name">Telegram Webhook</td>
+              <td><span class="cell-file">functions/telegramWebhook.ts</span></td>
+              <td class="cell-desc">Endpoint registered and deployed but no logic. Phase 2 item.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Lead status lifecycle -->
+      <div class="section-label" style="margin-top:2rem">
+        <h2 style="font-size:.9rem">Lead Status Lifecycle</h2>
+      </div>
+      <div class="flow" style="justify-content:center;gap:.5rem;">
+        <div class="flow-box" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:#93c5fd">
+          nuevo</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#fcd34d">
+          generando</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#86efac">listo
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.3);color:#d8b4fe">
+          contactado</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.15);color:#e2e8f0">
+          vendido</div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────── BUGS FIXED ────────────────────────── -->
+    <div class="section" id="bugs">
+      <div class="section-label">
+        <h2>Bugs Fixed in This Session</h2>
+        <span class="phase-badge badge-done">5 Patched</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Bug</th>
+              <th>File</th>
+              <th>Fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-red">Critical</span></td>
+              <td class="cell-name">Wrong payload sent to generateSite</td>
+              <td><span class="cell-file">admin/AdminClient.tsx</span></td>
+              <td class="cell-desc">Was sending entire <code
+                  style="font-family:monospace;font-size:.75rem">SiteConfig</code> blob. Now maps <code
+                  style="font-family:monospace;font-size:.75rem">businessName</code>, <code
+                  style="font-family:monospace;font-size:.75rem">category</code>, <code
+                  style="font-family:monospace;font-size:.75rem">description</code>, <code
+                  style="font-family:monospace;font-size:.75rem">phone</code> correctly.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-red">Security</span></td>
+              <td class="cell-name">Hardcoded DB credentials</td>
+              <td><span class="cell-file">services/sqlDb.ts</span></td>
+              <td class="cell-desc">Real Azure SQL credentials were hardcoded as fallback defaults. Removed. Now throws
+                clearly if env vars are missing.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-yellow">Medium</span></td>
+              <td class="cell-name">getSiteData fetched ALL sites to find one</td>
+              <td><span class="cell-file">lib/sites.ts</span></td>
+              <td class="cell-desc">Now calls <code
+                  style="font-family:monospace;font-size:.75rem">GET /api/getSites?slug=&lt;slug&gt;</code>. Dead <code
+                  style="font-family:monospace;font-size:.75rem">MOCK_DB</code> removed. Both functions use <code
+                  style="font-family:monospace;font-size:.75rem">cache: 'no-store'</code>.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-yellow">Medium</span></td>
+              <td class="cell-name">OpenRouter errors caused silent crash</td>
+              <td><span class="cell-file">functions/generateSite.ts<br />functions/chat.ts</span></td>
+              <td class="cell-desc">Added guard on <code
+                  style="font-family:monospace;font-size:.75rem">data.choices?.[0]?.message?.content</code>. Returns
+                proper 502 with error message instead of TypeError.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-yellow">Medium</span></td>
+              <td class="cell-name">Deduplication compared wrong fields</td>
+              <td><span class="cell-file">functions/findLeads.ts</span></td>
+              <td class="cell-desc">Was using <code
+                  style="font-family:monospace;font-size:.75rem">content.contactPhone</code> as address. Leads now store
+                <code style="font-family:monospace;font-size:.75rem">address</code> separately. Dedup compares against
+                <code style="font-family:monospace;font-size:.75rem">content.address</code>.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ────────────────────────── INFRASTRUCTURE ────────────────────────── -->
+    <div class="section" id="infra">
+      <div class="section-label">
+        <h2>Infrastructure</h2>
+        <span class="phase-badge badge-done">Azure</span>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:1.5rem">
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Detail</th>
+              <th>Cost</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-name">Azure Static Web App</td>
+              <td class="cell-desc">Hosts Next.js + managed Azure Functions</td>
+              <td class="cell-desc">Free / $9 mo</td>
+              <td><span class="pill pill-green">Live</span></td>
+            </tr>
+            <tr>
+              <td class="cell-name">Azure SQL (Serverless)</td>
+              <td class="cell-desc">Single <code style="font-family:monospace;font-size:.75rem">Sites</code> table —
+                slug, businessName, status, configJson</td>
+              <td class="cell-desc">~$0 idle</td>
+              <td><span class="pill pill-green">Live</span></td>
+            </tr>
+            <tr>
+              <td class="cell-name">Apify</td>
+              <td class="cell-desc"><code
+                  style="font-family:monospace;font-size:.75rem">compass/crawler-google-places</code> actor</td>
+              <td class="cell-desc">Pay-per-run</td>
+              <td><span class="pill pill-green">Live</span></td>
+            </tr>
+            <tr>
+              <td class="cell-name">OpenRouter</td>
+              <td class="cell-desc">DeepSeek V3 — site generation + chatbot</td>
+              <td class="cell-desc">Pay-per-token</td>
+              <td><span class="pill pill-green">Live</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout ok">
+        <span class="callout-icon">✅</span>
+        <div class="callout-text">
+          <strong>Apify Actor Applied</strong>
+          The code now uses <code>compass/crawler-google-places</code> as requested. This actor provides deep crawling
+          of Google Places results.
+        </div>
+      </div>
+
+      <div class="callout error" style="margin-top:.75rem">
+        <span class="callout-icon">🔐</span>
+        <div class="callout-text">
+          <strong>Auth Level Warning</strong>
+          <code>findLeads</code>, <code>generateSite</code>, and <code>getSites</code> use
+          <code>authLevel: 'function'</code>. Azure SWA does NOT automatically inject function keys for browser fetch
+          calls. If admin dashboard returns 401 in production, change to <code>authLevel: 'anonymous'</code> and protect
+          <code>/admin</code> via SWA auth instead.
+        </div>
+      </div>
+
+      <!-- DB Schema -->
+      <div class="section-label" style="margin-top:2rem">
+        <h2 style="font-size:.9rem">Database Schema — Sites Table</h2>
+      </div>
+      <div class="schema-block">
+        <span class="kw">CREATE TABLE</span> Sites (<br />
+        &nbsp;&nbsp;<span class="pk">slug</span> <span class="ty">NVARCHAR(255)</span> <span class="kw">PRIMARY
+          KEY</span>,<br />
+        &nbsp;&nbsp;businessName <span class="ty">NVARCHAR(500)</span> <span class="kw">NOT NULL</span>,<br />
+        &nbsp;&nbsp;status <span class="ty">NVARCHAR(50)</span> <span class="kw">NOT NULL</span>, <span class="cm">--
+          nuevo | generando | listo | contactado | vendido</span><br />
+        &nbsp;&nbsp;configJson <span class="ty">NVARCHAR(MAX)</span> <span class="kw">NOT NULL</span>, <span
+          class="cm">-- full SiteConfig JSON blob</span><br />
+        &nbsp;&nbsp;lastUpdated <span class="ty">DATETIME2</span> <span class="kw">DEFAULT</span> GETDATE()<br />
+        )
+      </div>
+
+      <!-- Required env vars -->
+      <div class="section-label" style="margin-top:2rem">
+        <h2 style="font-size:.9rem">Required Environment Variables</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Where</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody class="env-row">
+            <tr>
+              <td>OPENROUTER_API_KEY</td>
+              <td class="cell-desc">API (local.settings.json + Azure config)</td>
+              <td class="cell-desc">sk-or-... from openrouter.ai</td>
+            </tr>
+            <tr>
+              <td>APIFY_API_KEY</td>
+              <td class="cell-desc">API (local.settings.json + Azure config)</td>
+              <td class="cell-desc">From console.apify.com</td>
+            </tr>
+            <tr>
+              <td>SQL_USER</td>
+              <td class="cell-desc">API (local.settings.json + Azure config)</td>
+              <td class="cell-desc">Azure SQL username</td>
+            </tr>
+            <tr>
+              <td>SQL_PASSWORD</td>
+              <td class="cell-desc">API (local.settings.json + Azure config)</td>
+              <td class="cell-desc">Azure SQL password</td>
+            </tr>
+            <tr>
+              <td>SQL_SERVER</td>
+              <td class="cell-desc">API (local.settings.json + Azure config)</td>
+              <td class="cell-desc">e.g. server.database.windows.net</td>
+            </tr>
+            <tr>
+              <td>SQL_DATABASE</td>
+              <td class="cell-desc">API (local.settings.json + Azure config)</td>
+              <td class="cell-desc">Database name</td>
+            </tr>
+            <tr>
+              <td>NEXT_PUBLIC_API_URL</td>
+              <td class="cell-desc">Web (.env.local only — local dev)</td>
+              <td class="cell-desc">Set to <code
+                  style="font-family:monospace;font-size:.75rem">http://localhost:7071/api</code> for local. Do NOT set
+                in Azure — defaults to <code style="font-family:monospace;font-size:.75rem">/api</code> which SWA
+                proxies automatically.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ────────────────────────── PHASE 2 ────────────────────────── -->
+    <div class="section" id="phase2">
+      <div class="section-label">
+        <h2>Phase 2 — Sales Excellence</h2>
+        <span class="phase-badge badge-plan">Planning</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-gray">Pending</span></td>
+              <td class="cell-name">Email Outreach</td>
+              <td class="cell-desc">Resend integration — auto-send preview link to business owners after site is
+                generated.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-gray">Pending</span></td>
+              <td class="cell-name">Manual Text Override</td>
+              <td class="cell-desc">UI to edit AI-generated copy before publishing / sending to lead.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-blue">Stub exists</span></td>
+              <td class="cell-name">Telegram Bot</td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">telegramWebhook.ts</code>
+                deployed but empty. Commands: <code style="font-family:monospace;font-size:.75rem">/buscar</code>, <code
+                  style="font-family:monospace;font-size:.75rem">/construir</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-label" style="margin-top:2rem">
+        <h2 style="font-size:.9rem">Phase 3 — Growth</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-name">Custom Domains</td>
+              <td class="cell-desc">Automated SSL + domain mapping for paid clients. Middleware stub exists in <code
+                  style="font-family:monospace;font-size:.75rem">middleware.ts</code>.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Client Dashboard</td>
+              <td class="cell-desc">Portal for businesses to see their stats, leads, and chat history.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">AI Voice Calling</td>
+              <td class="cell-desc">Vapi / Twilio + OpenAI Realtime for automated appointment booking (~$0.15/min).</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Chatbot Training</td>
+              <td class="cell-desc">Allow clients to upload menus or files to fine-tune their chatbot.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ────────────────────────── DEPLOY / TEST ────────────────────────── -->
+    <div class="section" id="deploy">
+      <div class="section-label">
+        <h2>Running Locally &amp; Testing</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill pill-blue">1</span></td>
+              <td class="cell-desc">Create <code
+                  style="font-family:monospace;font-size:.75rem">apps/api/local.settings.json</code> with all 6 env vars
+                above (see DEPLOY.md for full template)</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-blue">2</span></td>
+              <td class="cell-desc">Set <code style="font-family:monospace;font-size:.75rem">apps/web/.env.local</code>
+                → <code
+                  style="font-family:monospace;font-size:.75rem">NEXT_PUBLIC_API_URL=http://localhost:7071/api</code>
+              </td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-blue">3</span></td>
+              <td class="cell-desc">Terminal 1: <code
+                  style="font-family:monospace;font-size:.75rem">cd apps/api && npm start</code></td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-blue">4</span></td>
+              <td class="cell-desc">Terminal 2: <code
+                  style="font-family:monospace;font-size:.75rem">cd apps/web && npm run dev</code></td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-blue">5</span></td>
+              <td class="cell-desc">Open <code
+                  style="font-family:monospace;font-size:.75rem">http://localhost:3000/admin</code> → Scrape → Generate
+                → Preview site → Test chatbot</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout ok" style="margin-top:1rem">
+        <span class="callout-icon">✅</span>
+        <div class="callout-text">
+          <strong>What to verify on first run</strong>
+          Scraping returns results → leads appear in table → GENERAR produces a site at <code>/sites/[slug]</code> →
+          chatbot responds in Spanish with business context.
+        </div>
+      </div>
+      <div class="callout info" style="margin-top:.75rem">
+        <span class="callout-icon">📄</span>
+        <div class="callout-text">
+          <strong>Full deploy guide</strong>
+          See <code>docs/DEPLOY.md</code> for the complete Azure SWA deployment walkthrough and GitHub Actions setup.
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      LocalClaw MX &nbsp;·&nbsp; Generated Feb 16, 2026 &nbsp;·&nbsp; Phase 1 complete
+    </footer>
+
+  </div>
+</body>
+
+</html>

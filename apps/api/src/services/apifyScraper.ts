@@ -22,27 +22,46 @@ export class ApifyScraperService {
     }
 
     async findLeads(niche: string, location: string): Promise<ScrapedBusiness[]> {
-        // We use the "google-maps-scraper" actor from Apify
+        // Updated to use "compass/crawler-google-places" as requested
         const input = {
-            searchStrings: [`${niche} in ${location}`],
-            maxPagesPerQuery: 1,
-            maxItemsPerQuery: 20,
-            language: "es", // Priorities Spanish
+            searchStringsArray: [niche],
+            locationQuery: location,
+            maxCrawledPlacesPerSearch: 20,
+            language: "es", // Priority Spanish for MX context
+            searchMatching: "all",
+            placeMinimumStars: "",
+            website: "allPlaces",
+            skipClosedPlaces: false,
+            scrapePlaceDetailPage: true, // Needed for more details
+            scrapeTableReservationProvider: false,
+            includeWebResults: false,
+            scrapeDirectories: false,
+            maxQuestions: 0,
+            scrapeContacts: false,
+            maximumLeadsEnrichmentRecords: 0,
+            maxReviews: 0,
+            reviewsSort: "newest",
+            reviewsFilterString: "",
+            reviewsOrigin: "all",
+            scrapeReviewsPersonalData: false,
+            maxImages: 0,
+            scrapeImageAuthors: false,
+            allPlacesNoSearchAction: ""
         };
 
         try {
-            const run = await this.client.actor("compass/google-maps-scraper").call(input);
+            const run = await this.client.actor("compass/crawler-google-places").call(input);
             const { items } = await this.client.dataset(run.defaultDatasetId).listItems();
 
             return items.map((item: any) => ({
-                name: item.title,
-                category: item.categoryName,
+                name: item.title || item.name,
+                category: item.categoryName || item.category,
                 address: item.address,
                 phone: item.phone,
                 website: item.website,
                 description: item.description,
                 reviewsCount: item.reviewsCount,
-                rating: item.totalScore,
+                rating: item.totalScore || item.stars,
             }));
         } catch (error) {
             console.error('Error in ApifyScraperService:', error);
@@ -51,29 +70,31 @@ export class ApifyScraperService {
     }
 
     async scrapeSingleUrl(url: string): Promise<ScrapedBusiness | null> {
+        // Using crawler-google-places with a specific start URL
         const input = {
-            startUrls: [{ url }],
-            maxPagesPerQuery: 1,
-            maxItemsPerQuery: 1,
+            searchStringsArray: [url], // Scrapers usually resolve URLs in search
+            maxCrawledPlacesPerSearch: 1,
             language: "es",
+            scrapePlaceDetailPage: true,
+            // ... rest of defaults to stay consistent
         };
 
         try {
-            const run = await this.client.actor("compass/google-maps-scraper").call(input);
+            const run = await this.client.actor("compass/crawler-google-places").call(input);
             const { items } = await this.client.dataset(run.defaultDatasetId).listItems();
 
             if (items.length === 0) return null;
 
             const item: any = items[0];
             return {
-                name: item.title,
-                category: item.categoryName,
+                name: item.title || item.name,
+                category: item.categoryName || item.category,
                 address: item.address,
                 phone: item.phone,
                 website: item.website,
                 description: item.description,
                 reviewsCount: item.reviewsCount,
-                rating: item.totalScore,
+                rating: item.totalScore || item.stars,
             };
         } catch (error) {
             console.error('Error scraping single URL:', error);

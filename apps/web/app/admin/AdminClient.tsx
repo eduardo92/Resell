@@ -39,13 +39,20 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
         }
     };
 
-    const handleGenerate = async (lead: any) => {
+    const handleGenerate = async (lead: SiteConfig) => {
         setIsScraping(true); // Reusing loading state
         try {
             const response = await fetch('/api/generateSite', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(lead),
+                body: JSON.stringify({
+                    businessName: lead.businessName,
+                    category: lead.content.heroSubtitle,
+                    description: lead.content.aboutText,
+                    phone: lead.content.contactPhone,
+                    address: lead.content.contactPhone, // stored as phone|address on findLeads insert
+                    website: lead.content.contactEmail,
+                }),
             });
 
             if (response.ok) {
@@ -149,7 +156,7 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex flex-col gap-1">
-                                                <Link href={`/sites/${site.slug}`} target="_blank" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
+                                                <Link href={`/sites/view?slug=${site.slug}`} target="_blank" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
                                                     <Globe size={14} /> /{site.slug}
                                                 </Link>
                                                 <span className="text-[10px] text-gray-400 uppercase font-bold">

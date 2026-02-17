@@ -1,6 +1,6 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { ApifyScraperService } from "../services/apifyScraper";
-import { CosmosDbService } from "../services/cosmosDb";
+import { SqlDbService } from '../services/sqlDb';
 import { slugify } from "../utils/slugify";
 
 export async function findLeads(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
@@ -32,9 +32,15 @@ export async function findLeads(request: HttpRequest, context: InvocationContext
             leads = await scraper.findLeads(niche, location);
         }
 
-        const db = CosmosDbService.getInstance();
+        const db = SqlDbService.getInstance();
+        await db.initDatabase();
         const existingResources = await db.getAllSites();
-        const existingLeads = existingResources.map(r => ({ name: r.businessName, address: r.content.contactPhone || '' }));
+        // Use businessName + address (stored in content.aboutText origin) for dedup.
+        // The scraper stores address in content.contactPhone fallback, so we compare by slug-friendly name only when address is unavailable.
+        const existingLeads = existingResources.map((r: any) => ({
+            name: r.businessName,
+            address: r.content?.address || r.content?.contactPhone || ''
+        }));
 
         const deduplicated = scraper.deduplicateLeads(leads, existingLeads as any);
 
@@ -55,7 +61,8 @@ export async function findLeads(request: HttpRequest, context: InvocationContext
                     aboutText: lead.description || 'Impulsamos tu negocio con tecnología.',
                     services: [lead.category || 'Servicio Profesional'],
                     contactEmail: lead.website || '',
-                    contactPhone: lead.phone || lead.address || ''
+                    contactPhone: lead.phone || '',
+                    address: lead.address || ''
                 },
                 hasExistingWebsite: !!lead.website,
                 status: 'nuevo',
