@@ -1,16 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Search, Loader2, Rocket, Globe } from 'lucide-react';
 import { SiteConfig } from '@/lib/sites';
 
 export default function AdminClient({ initialSites }: { initialSites: SiteConfig[] }) {
     const [sites, setSites] = useState(initialSites);
+    const [isLoading, setIsLoading] = useState(initialSites.length === 0);
     const [niche, setNiche] = useState('');
     const [location, setLocation] = useState('');
     const [businessUrl, setBusinessUrl] = useState('');
     const [isScraping, setIsScraping] = useState(false);
+
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Fetch sites on mount if we're in a static export/client-side context
+        fetch('/api/getSites')
+            .then(async res => {
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(text || `Error ${res.status}`);
+                }
+                return res.json();
+            })
+            .then(data => {
+                setSites(data);
+                setIsLoading(false);
+            })
+            .catch(err => {
+                console.error('Error fetching sites:', err);
+                setError(err.message);
+                setIsLoading(false);
+            });
+    }, []);
 
     const handleScrape = async () => {
         if (!businessUrl && (!niche || !location)) return;
@@ -137,82 +161,111 @@ export default function AdminClient({ initialSites }: { initialSites: SiteConfig
                         </span>
                     </div>
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="bg-gray-50 text-gray-500 uppercase text-[10px] font-black tracking-widest">
-                                <tr>
-                                    <th className="px-8 py-4">Negocio</th>
-                                    <th className="px-8 py-4">Status / Link</th>
-                                    <th className="px-8 py-4">Tiene Web?</th>
-                                    <th className="px-8 py-4">Plantilla</th>
-                                    <th className="px-8 py-4 text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {sites.map((site) => (
-                                    <tr key={site.slug} className="hover:bg-gray-50/50 transition">
-                                        <td className="px-8 py-6">
-                                            <div className="font-bold text-gray-900">{site.businessName}</div>
-                                            <div className="text-xs text-gray-400 font-medium">{site.content.contactEmail}</div>
-                                        </td>
-                                        <td className="px-8 py-6">
-                                            <div className="flex flex-col gap-1">
-                                                <Link href={`/sites/view?slug=${site.slug}`} target="_blank" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
-                                                    <Globe size={14} /> /{site.slug}
-                                                </Link>
-                                                <span className="text-[10px] text-gray-400 uppercase font-bold">
-                                                    Actualizado: {new Date(site.lastUpdated).toLocaleDateString()}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-6">
-                                            <div className="flex flex-col gap-2">
-                                                {site.hasExistingWebsite ? (
-                                                    <span className="text-[10px] font-black bg-red-50 text-red-500 px-3 py-1 rounded-lg border border-red-100 inline-block w-fit">
-                                                        DESCARTADO
-                                                    </span>
-                                                ) : (
-                                                    <span className={`text-[10px] font-black px-3 py-1 rounded-lg border inline-block w-fit uppercase ${site.status === 'listo' ? 'bg-green-50 text-green-500 border-green-100' :
-                                                        site.status === 'nuevo' ? 'bg-blue-50 text-blue-500 border-blue-100' :
-                                                            'bg-gray-50 text-gray-500 border-gray-100'
-                                                        }`}>
-                                                        {site.status === 'listo' ? 'LISTO ✅' : site.status}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-6">
-                                            <span className="text-[10px] font-black bg-gray-100 text-gray-500 px-3 py-1 rounded-lg uppercase">
-                                                {site.templateId}
-                                            </span>
-                                        </td>
-                                        <td className="px-8 py-6 text-right">
-                                            <div className="flex justify-end gap-2">
-                                                {site.status === 'nuevo' && !site.hasExistingWebsite && (
-                                                    <button
-                                                        onClick={() => handleGenerate(site)}
-                                                        disabled={isScraping}
-                                                        className="bg-coral-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-coral-600 transition disabled:opacity-50"
-                                                    >
-                                                        {isScraping ? '...' : 'GENERAR'}
-                                                    </button>
-                                                )}
-                                                {site.status === 'listo' && (
-                                                    <button
-                                                        onClick={() => alert('Próximamente: Mejora este sitio con planes Premium (Plan de Pagos).')}
-                                                        className="bg-black text-white text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-gray-800 transition"
-                                                    >
-                                                        PREMIUM ⭐
-                                                    </button>
-                                                )}
-                                                <button className="text-gray-400 hover:text-coral-500 font-bold text-sm transition">
-                                                    Configurar
-                                                </button>
-                                            </div>
-                                        </td>
+                        {isLoading ? (
+                            <div className="p-20 flex flex-col items-center justify-center gap-4">
+                                <Loader2 className="animate-spin text-coral-500" size={40} />
+                                <p className="text-gray-400 font-medium animate-pulse">Conectando con la base de datos SQL...</p>
+                            </div>
+                        ) : error ? (
+                            <div className="p-20 text-center">
+                                <div className="text-red-500 mb-4 flex justify-center">
+                                    <Globe size={60} strokeWidth={1} className="opacity-20" />
+                                </div>
+                                <h4 className="text-lg font-bold text-gray-900 mb-1">Error de Conexión</h4>
+                                <p className="text-red-500 max-w-xs mx-auto text-sm bg-red-50 p-3 rounded-lg border border-red-100">{error}</p>
+                                <button
+                                    onClick={() => window.location.reload()}
+                                    className="mt-6 text-coral-500 font-bold hover:underline"
+                                >
+                                    Reintentar Conexión
+                                </button>
+                            </div>
+                        ) : sites.length === 0 ? (
+                            <div className="p-20 text-center">
+                                <div className="text-gray-300 mb-4 flex justify-center">
+                                    <Globe size={60} strokeWidth={1} />
+                                </div>
+                                <h4 className="text-lg font-bold text-gray-900 mb-1">Sin prospectos aún</h4>
+                                <p className="text-gray-500 max-w-xs mx-auto">Usa el buscador de arriba para encontrar negocios en Google Maps y empezar a vender.</p>
+                            </div>
+                        ) : (
+                            <table className="w-full text-left">
+                                <thead className="bg-gray-50 text-gray-500 uppercase text-[10px] font-black tracking-widest">
+                                    <tr>
+                                        <th className="px-8 py-4">Negocio</th>
+                                        <th className="px-8 py-4">Status / Link</th>
+                                        <th className="px-8 py-4">Tiene Web?</th>
+                                        <th className="px-8 py-4">Plantilla</th>
+                                        <th className="px-8 py-4 text-right">Acciones</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {sites.map((site) => (
+                                        <tr key={site.slug} className="hover:bg-gray-50/50 transition">
+                                            <td className="px-8 py-6">
+                                                <div className="font-bold text-gray-900">{site.businessName}</div>
+                                                <div className="text-xs text-gray-400 font-medium">{site.content.contactEmail}</div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex flex-col gap-1">
+                                                    <Link href={`/sites/view?slug=${site.slug}`} target="_blank" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:underline">
+                                                        <Globe size={14} /> /{site.slug}
+                                                    </Link>
+                                                    <span className="text-[10px] text-gray-400 uppercase font-bold">
+                                                        Actualizado: {new Date(site.lastUpdated).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex flex-col gap-2">
+                                                    {site.hasExistingWebsite ? (
+                                                        <span className="text-[10px] font-black bg-red-50 text-red-500 px-3 py-1 rounded-lg border border-red-100 inline-block w-fit">
+                                                            DESCARTADO
+                                                        </span>
+                                                    ) : (
+                                                        <span className={`text-[10px] font-black px-3 py-1 rounded-lg border inline-block w-fit uppercase ${site.status === 'listo' ? 'bg-green-50 text-green-500 border-green-100' :
+                                                            site.status === 'nuevo' ? 'bg-blue-50 text-blue-500 border-blue-100' :
+                                                                'bg-gray-50 text-gray-500 border-gray-100'
+                                                            }`}>
+                                                            {site.status === 'listo' ? 'LISTO ✅' : site.status}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <span className="text-[10px] font-black bg-gray-100 text-gray-500 px-3 py-1 rounded-lg uppercase">
+                                                    {site.templateId}
+                                                </span>
+                                            </td>
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    {site.status === 'nuevo' && !site.hasExistingWebsite && (
+                                                        <button
+                                                            onClick={() => handleGenerate(site)}
+                                                            disabled={isScraping}
+                                                            className="bg-coral-500 text-white text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-coral-600 transition disabled:opacity-50"
+                                                        >
+                                                            {isScraping ? '...' : 'GENERAR'}
+                                                        </button>
+                                                    )}
+                                                    {site.status === 'listo' && (
+                                                        <button
+                                                            onClick={() => alert('Próximamente: Mejora este sitio con planes Premium (Plan de Pagos).')}
+                                                            className="bg-black text-white text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-gray-800 transition"
+                                                        >
+                                                            PREMIUM ⭐
+                                                        </button>
+                                                    )}
+                                                    <button className="text-gray-400 hover:text-coral-500 font-bold text-sm transition">
+                                                        Configurar
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
                     </div>
                 </div>
             </div>
