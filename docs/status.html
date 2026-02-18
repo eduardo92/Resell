@@ -158,15 +158,8 @@
     }
 
     @keyframes pulse {
-
-      0%,
-      100% {
-        opacity: 1
-      }
-
-      50% {
-        opacity: .4
-      }
+      0%, 100% { opacity: 1 }
+      50% { opacity: .4 }
     }
 
     /* ── SECTION TITLES ── */
@@ -235,17 +228,9 @@
       line-height: 1;
     }
 
-    .stat-card .num.green {
-      color: var(--green);
-    }
-
-    .stat-card .num.yellow {
-      color: var(--yellow);
-    }
-
-    .stat-card .num.red {
-      color: var(--red);
-    }
+    .stat-card .num.green { color: var(--green); }
+    .stat-card .num.yellow { color: var(--yellow); }
+    .stat-card .num.red { color: var(--red); }
 
     .stat-card .label {
       font-size: .72rem;
@@ -354,6 +339,22 @@
       white-space: nowrap;
     }
 
+    .cell-url {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .72rem;
+      color: #38bdf8;
+      word-break: break-all;
+    }
+
+    .cell-url a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+
+    .cell-url a:hover {
+      text-decoration: underline;
+    }
+
     .cell-desc {
       color: var(--muted);
       font-size: .78rem;
@@ -401,11 +402,6 @@
       border: 1px solid rgba(100, 116, 139, .2);
     }
 
-    /* ── BUG TABLE ── */
-    .bug-icon {
-      font-size: .9rem;
-    }
-
     /* ── SCHEMA ── */
     .schema-block {
       background: var(--surface);
@@ -418,21 +414,10 @@
       line-height: 1.8;
     }
 
-    .schema-block .kw {
-      color: var(--accent2);
-    }
-
-    .schema-block .ty {
-      color: var(--blue);
-    }
-
-    .schema-block .cm {
-      color: var(--muted);
-    }
-
-    .schema-block .pk {
-      color: var(--green);
-    }
+    .schema-block .kw { color: var(--accent2); }
+    .schema-block .ty { color: var(--blue); }
+    .schema-block .cm { color: var(--muted); }
+    .schema-block .pk { color: var(--green); }
 
     /* ── ENV TABLE ── */
     .env-row td:first-child {
@@ -454,17 +439,9 @@
       font-size: .82rem;
     }
 
-    .callout.info {
-      border-left-color: var(--blue);
-    }
-
-    .callout.error {
-      border-left-color: var(--red);
-    }
-
-    .callout.ok {
-      border-left-color: var(--green);
-    }
+    .callout.info { border-left-color: var(--blue); }
+    .callout.error { border-left-color: var(--red); }
+    .callout.ok { border-left-color: var(--green); }
 
     .callout-icon {
       font-size: 1.1rem;
@@ -498,17 +475,9 @@
 
     /* ── RESPONSIVE ── */
     @media(max-width:600px) {
-      nav {
-        gap: 1rem;
-      }
-
-      .flow {
-        gap: .4rem;
-      }
-
-      .flow-arrow {
-        display: none;
-      }
+      nav { gap: 1rem; }
+      .flow { gap: .4rem; }
+      .flow-arrow { display: none; }
     }
   </style>
 </head>
@@ -518,6 +487,7 @@
   <!-- NAV -->
   <nav>
     <span class="nav-brand">LocalClaw MX</span>
+    <a href="#urls">URLs</a>
     <a href="#phase1">Phase 1</a>
     <a href="#bugs">Bugs Fixed</a>
     <a href="#infra">Infra</a>
@@ -529,20 +499,120 @@
 
     <!-- HERO -->
     <div class="hero">
-      <div class="hero-tag">Last updated Feb 16, 2026</div>
+      <div class="hero-tag">Last updated Feb 17, 2026</div>
       <h1>LocalClaw <span>MX</span></h1>
       <p>Find Mexican business leads via Apify, generate AI-branded websites with DeepSeek V3, sell them.</p>
       <div class="live-links">
         <a class="live-link" href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/admin" target="_blank">
           <span class="live-dot"></span> Admin Dashboard
         </a>
-        <a class="live-link" href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/sites/view?slug=mariscos-reny"
-          target="_blank">
-          <span class="live-dot"></span> Example Site
+        <a class="live-link" href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/sites/view?slug=mariscos-reny" target="_blank">
+          <span class="live-dot"></span> Example Site (Mariscos Reny)
         </a>
         <a class="live-link" href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/api/getSites" target="_blank">
-          <span class="live-dot"></span> API Status
+          <span class="live-dot"></span> API: getSites
         </a>
+      </div>
+    </div>
+
+    <!-- ────────────────────────── LIVE URLS ────────────────────────── -->
+    <div class="section" id="urls">
+      <div class="section-label">
+        <h2>Live URLs — Everything in One Place</h2>
+        <span class="phase-badge badge-done">Verified</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>URL</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Frontend -->
+            <tr>
+              <td class="cell-name">Frontend — Home</td>
+              <td class="cell-url"><a href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/" target="_blank">kind-pebble-0c8247f0f.4.azurestaticapps.net/</a></td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Next.js 16 static export hosted on Azure SWA (Free tier, East US 2)</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Admin Dashboard</td>
+              <td class="cell-url"><a href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/admin" target="_blank">.../admin</a></td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Scraper form + leads table + GENERAR button. Loads sites from DB on mount.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Site Preview (Mariscos Reny)</td>
+              <td class="cell-url"><a href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/sites/view?slug=mariscos-reny" target="_blank">.../sites/view?slug=mariscos-reny</a></td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Restaurant template. AI-generated demo site already in DB.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">Site Preview (Test)</td>
+              <td class="cell-url"><a href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/sites/view?slug=test" target="_blank">.../sites/view?slug=test</a></td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Generic template. AI-generated test entry in DB.</td>
+            </tr>
+            <!-- API Endpoints -->
+            <tr>
+              <td class="cell-name">GET /api/getSites</td>
+              <td class="cell-url"><a href="https://kind-pebble-0c8247f0f.4.azurestaticapps.net/api/getSites" target="_blank">.../api/getSites</a></td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Returns all sites. Verified returning 2 sites (mariscos-reny, test).</td>
+            </tr>
+            <tr>
+              <td class="cell-name">GET /api/getSites?slug=</td>
+              <td class="cell-url">.../api/getSites?slug=mariscos-reny</td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Returns single site or 404 if not found.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">POST /api/findLeads</td>
+              <td class="cell-url">.../api/findLeads</td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Body: <code style="font-family:monospace;font-size:.72rem">{"niche":"Plomeros","location":"León"}</code> or <code style="font-family:monospace;font-size:.72rem">{"url":"https://maps.google..."}</code></td>
+            </tr>
+            <tr>
+              <td class="cell-name">POST /api/generateSite</td>
+              <td class="cell-url">.../api/generateSite</td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Body: <code style="font-family:monospace;font-size:.72rem">{"businessName","category","description","phone","address"}</code></td>
+            </tr>
+            <tr>
+              <td class="cell-name">POST /api/chat</td>
+              <td class="cell-url">.../api/chat</td>
+              <td><span class="pill pill-green">✓ 200</span></td>
+              <td class="cell-desc">Visitor-facing chatbot. Body: <code style="font-family:monospace;font-size:.72rem">{"message","siteConfig"}</code>. authLevel: anonymous.</td>
+            </tr>
+            <tr>
+              <td class="cell-name">POST /api/telegramWebhook</td>
+              <td class="cell-url">.../api/telegramWebhook</td>
+              <td><span class="pill pill-gray">Stub</span></td>
+              <td class="cell-desc">Deployed but no logic. Phase 2 item.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout ok">
+        <span class="callout-icon">✅</span>
+        <div class="callout-text">
+          <strong>Deployment: Manual via SWA CLI</strong>
+          No GitHub Actions CI/CD. To redeploy: <code>cd Resell && npx @azure/static-web-apps-cli deploy localclaw --deployment-token TOKEN --env production --api-language node --api-version 18</code>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top:.75rem">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-text">
+          <strong>Auth Levels — Working in Production</strong>
+          All four functions use <code>authLevel: 'function'</code> except <code>chat</code> which is <code>'anonymous'</code>. Azure SWA automatically injects function keys for managed functions — browser fetch calls work without any manual key passing.
+        </div>
       </div>
     </div>
 
@@ -556,7 +626,7 @@
       <!-- Summary stats -->
       <div class="summary-grid">
         <div class="stat-card">
-          <div class="num green">8</div>
+          <div class="num green">9</div>
           <div class="label">Features Shipped</div>
         </div>
         <div class="stat-card">
@@ -568,19 +638,19 @@
           <div class="label">Site Templates</div>
         </div>
         <div class="stat-card">
-          <div class="num yellow">5</div>
+          <div class="num yellow">6</div>
           <div class="label">Bugs Fixed</div>
         </div>
         <div class="stat-card">
-          <div class="num green">1</div>
-          <div class="label">AI Chatbot</div>
+          <div class="num green">2</div>
+          <div class="label">Sites in DB</div>
         </div>
       </div>
 
       <!-- Data flow -->
       <div class="flow">
         <div class="flow-step">
-          <div class="flow-box">Admin /admin<span class="sub">Next.js SSR</span></div>
+          <div class="flow-box">Admin /admin<span class="sub">Next.js static</span></div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
@@ -592,7 +662,7 @@
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
-          <div class="flow-box">GET /sites/[slug]<span class="sub">SSR Template</span></div>
+          <div class="flow-box">GET /sites/view?slug=<span class="sub">Client-side SSR</span></div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
@@ -616,66 +686,55 @@
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Apify Google Maps Scraper</td>
               <td><span class="cell-file">services/apifyScraper.ts</span></td>
-              <td class="cell-desc">Bulk (niche + city) and single Google Maps URL. Uses <code
-                  style="font-family:monospace;font-size:.75rem">compass/google-maps-scraper</code> actor.</td>
+              <td class="cell-desc">Bulk (niche + city) and single Google Maps URL. Actor: <code style="font-family:monospace;font-size:.72rem">compass/crawler-google-places</code>.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Lead Deduplication</td>
               <td><span class="cell-file">services/apifyScraper.ts</span></td>
-              <td class="cell-desc">Dedupes by name + address before insert. Fixed to store <code
-                  style="font-family:monospace;font-size:.75rem">address</code> as separate field.</td>
+              <td class="cell-desc">Dedupes by name + address before SQL insert.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Azure SQL Database</td>
               <td><span class="cell-file">services/sqlDb.ts</span></td>
-              <td class="cell-desc">Singleton connection pool. UPSERT logic. Auto-creates <code
-                  style="font-family:monospace;font-size:.75rem">Sites</code> table on first connect.</td>
+              <td class="cell-desc">Singleton connection pool. UPSERT logic. Auto-creates <code style="font-family:monospace;font-size:.72rem">Sites</code> table on first connect. 2 sites in DB.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Find Leads API</td>
               <td><span class="cell-file">functions/findLeads.ts</span></td>
-              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">POST /api/findLeads</code> —
-                Scrape → dedup → save as status <em>nuevo</em>.</td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">POST /api/findLeads</code> — Scrape → dedup → save as status <em>nuevo</em>.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">AI Site Generator</td>
               <td><span class="cell-file">functions/generateSite.ts</span></td>
-              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">POST /api/generateSite</code> —
-                OpenRouter + DeepSeek V3 → brand config JSON → SQL.</td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">POST /api/generateSite</code> — OpenRouter + DeepSeek V3 (<code style="font-family:monospace;font-size:.72rem">deepseek/deepseek-chat</code>) → brand config JSON → SQL.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Get Sites API</td>
               <td><span class="cell-file">functions/getSites.ts</span></td>
-              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">GET /api/getSites</code> and
-                <code style="font-family:monospace;font-size:.75rem">GET /api/getSites?slug=</code>
-              </td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">GET /api/getSites</code> and <code style="font-family:monospace;font-size:.72rem">GET /api/getSites?slug=</code></td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">AI Chatbot API</td>
               <td><span class="cell-file">functions/chat.ts</span></td>
-              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">POST /api/chat</code> —
-                Visitor-facing, anonymous auth. Uses brand personality + tone from SiteConfig.</td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">POST /api/chat</code> — Visitor-facing, anonymous auth. Uses brand personality + tone from SiteConfig.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Admin Dashboard</td>
               <td><span class="cell-file">app/admin/AdminClient.tsx</span></td>
-              <td class="cell-desc">Scraper form (niche+city or URL) + leads table + GENERAR button + status badges.
-              </td>
+              <td class="cell-desc">Fetches sites from DB on mount (useEffect). Scraper form + leads table + GENERAR button + status badges.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Lead Site Preview</td>
               <td><span class="cell-file">app/sites/view/page.tsx</span></td>
-              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">/sites/view?slug=[slug]</code>
-                —
-                Client-side fetch using the slug query param (Static Export compatible).</td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">/sites/view?slug=[slug]</code> — Client-side fetch. Static Export compatible.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
@@ -687,7 +746,7 @@
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">Plumber Template</td>
               <td><span class="cell-file">templates/PlumberTemplate.tsx</span></td>
-              <td class="cell-desc">Service-provider layout. Untracked in git — needs committing.</td>
+              <td class="cell-desc">Service-provider layout.</td>
             </tr>
             <tr>
               <td><span class="pill pill-green">✓ Live</span></td>
@@ -699,14 +758,13 @@
               <td><span class="pill pill-green">✓ Live</span></td>
               <td class="cell-name">AI Chatbot Widget</td>
               <td><span class="cell-file">templates/AIChatbot.tsx</span></td>
-              <td class="cell-desc">Floating bubble on all templates. Sends full SiteConfig to <code
-                  style="font-family:monospace;font-size:.75rem">/api/chat</code>.</td>
+              <td class="cell-desc">Floating bubble on all templates. Sends full SiteConfig to <code style="font-family:monospace;font-size:.72rem">/api/chat</code>. Verified working.</td>
             </tr>
             <tr>
               <td><span class="pill pill-gray">Stub</span></td>
               <td class="cell-name">Telegram Webhook</td>
               <td><span class="cell-file">functions/telegramWebhook.ts</span></td>
-              <td class="cell-desc">Endpoint registered and deployed but no logic. Phase 2 item.</td>
+              <td class="cell-desc">Endpoint deployed but no logic. Phase 2 item.</td>
             </tr>
           </tbody>
         </table>
@@ -717,28 +775,23 @@
         <h2 style="font-size:.9rem">Lead Status Lifecycle</h2>
       </div>
       <div class="flow" style="justify-content:center;gap:.5rem;">
-        <div class="flow-box" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:#93c5fd">
-          nuevo</div>
+        <div class="flow-box" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:#93c5fd">nuevo</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#fcd34d">
-          generando</div>
+        <div class="flow-box" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:#fcd34d">generando</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#86efac">listo
-        </div>
+        <div class="flow-box" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#86efac">listo</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.3);color:#d8b4fe">
-          contactado</div>
+        <div class="flow-box" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.3);color:#d8b4fe">contactado</div>
         <div class="flow-arrow">→</div>
-        <div class="flow-box" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.15);color:#e2e8f0">
-          vendido</div>
+        <div class="flow-box" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.15);color:#e2e8f0">vendido</div>
       </div>
     </div>
 
     <!-- ────────────────────────── BUGS FIXED ────────────────────────── -->
     <div class="section" id="bugs">
       <div class="section-label">
-        <h2>Bugs Fixed in This Session</h2>
-        <span class="phase-badge badge-done">5 Patched</span>
+        <h2>Bugs Fixed</h2>
+        <span class="phase-badge badge-done">6 Patched</span>
       </div>
 
       <div class="table-wrap">
@@ -754,48 +807,39 @@
           <tbody>
             <tr>
               <td><span class="pill pill-red">Critical</span></td>
+              <td class="cell-name">Admin never loaded DB sites</td>
+              <td><span class="cell-file">admin/AdminClient.tsx</span></td>
+              <td class="cell-desc">Page passed <code style="font-family:monospace;font-size:.72rem">initialSites={[]}</code> with no fetch. Added <code style="font-family:monospace;font-size:.72rem">useEffect</code> to call <code style="font-family:monospace;font-size:.72rem">/api/getSites</code> on mount. Added <code style="font-family:monospace;font-size:.72rem">isLoading</code> spinner + empty-state UI. Deployed Feb 17, 2026.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-red">Critical</span></td>
               <td class="cell-name">Wrong payload sent to generateSite</td>
               <td><span class="cell-file">admin/AdminClient.tsx</span></td>
-              <td class="cell-desc">Was sending entire <code
-                  style="font-family:monospace;font-size:.75rem">SiteConfig</code> blob. Now maps <code
-                  style="font-family:monospace;font-size:.75rem">businessName</code>, <code
-                  style="font-family:monospace;font-size:.75rem">category</code>, <code
-                  style="font-family:monospace;font-size:.75rem">description</code>, <code
-                  style="font-family:monospace;font-size:.75rem">phone</code> correctly.</td>
+              <td class="cell-desc">Was sending entire SiteConfig blob. Now maps <code style="font-family:monospace;font-size:.72rem">businessName</code>, <code style="font-family:monospace;font-size:.72rem">category</code>, <code style="font-family:monospace;font-size:.72rem">description</code>, <code style="font-family:monospace;font-size:.72rem">phone</code> correctly.</td>
             </tr>
             <tr>
               <td><span class="pill pill-red">Security</span></td>
               <td class="cell-name">Hardcoded DB credentials</td>
               <td><span class="cell-file">services/sqlDb.ts</span></td>
-              <td class="cell-desc">Real Azure SQL credentials were hardcoded as fallback defaults. Removed. Now throws
-                clearly if env vars are missing.</td>
+              <td class="cell-desc">Real Azure SQL credentials were hardcoded as fallback defaults. Removed. Now throws clearly if env vars are missing.</td>
             </tr>
             <tr>
               <td><span class="pill pill-yellow">Medium</span></td>
               <td class="cell-name">getSiteData fetched ALL sites to find one</td>
               <td><span class="cell-file">lib/sites.ts</span></td>
-              <td class="cell-desc">Now calls <code
-                  style="font-family:monospace;font-size:.75rem">GET /api/getSites?slug=&lt;slug&gt;</code>. Dead <code
-                  style="font-family:monospace;font-size:.75rem">MOCK_DB</code> removed. Both functions use <code
-                  style="font-family:monospace;font-size:.75rem">cache: 'no-store'</code>.</td>
+              <td class="cell-desc">Now calls <code style="font-family:monospace;font-size:.72rem">GET /api/getSites?slug=&lt;slug&gt;</code>. Dead MOCK_DB removed. Both functions use <code style="font-family:monospace;font-size:.72rem">cache: 'no-store'</code>.</td>
             </tr>
             <tr>
               <td><span class="pill pill-yellow">Medium</span></td>
               <td class="cell-name">OpenRouter errors caused silent crash</td>
               <td><span class="cell-file">functions/generateSite.ts<br />functions/chat.ts</span></td>
-              <td class="cell-desc">Added guard on <code
-                  style="font-family:monospace;font-size:.75rem">data.choices?.[0]?.message?.content</code>. Returns
-                proper 502 with error message instead of TypeError.</td>
+              <td class="cell-desc">Added guard on <code style="font-family:monospace;font-size:.72rem">data.choices?.[0]?.message?.content</code>. Returns proper 502 with error message instead of TypeError.</td>
             </tr>
             <tr>
               <td><span class="pill pill-yellow">Medium</span></td>
               <td class="cell-name">Deduplication compared wrong fields</td>
               <td><span class="cell-file">functions/findLeads.ts</span></td>
-              <td class="cell-desc">Was using <code
-                  style="font-family:monospace;font-size:.75rem">content.contactPhone</code> as address. Leads now store
-                <code style="font-family:monospace;font-size:.75rem">address</code> separately. Dedup compares against
-                <code style="font-family:monospace;font-size:.75rem">content.address</code>.
-              </td>
+              <td class="cell-desc">Was using <code style="font-family:monospace;font-size:.72rem">content.contactPhone</code> as address. Now stores address separately and dedupes against <code style="font-family:monospace;font-size:.72rem">content.address</code>.</td>
             </tr>
           </tbody>
         </table>
@@ -806,7 +850,7 @@
     <div class="section" id="infra">
       <div class="section-label">
         <h2>Infrastructure</h2>
-        <span class="phase-badge badge-done">Azure</span>
+        <span class="phase-badge badge-done">Azure — East US 2</span>
       </div>
 
       <div class="table-wrap" style="margin-bottom:1.5rem">
@@ -814,6 +858,7 @@
           <thead>
             <tr>
               <th>Service</th>
+              <th>Resource Name</th>
               <th>Detail</th>
               <th>Cost</th>
               <th>Status</th>
@@ -822,27 +867,29 @@
           <tbody>
             <tr>
               <td class="cell-name">Azure Static Web App</td>
-              <td class="cell-desc">Hosts Next.js + managed Azure Functions</td>
-              <td class="cell-desc">Free / $9 mo</td>
+              <td><span class="cell-file">swa-localclaw-mx</span></td>
+              <td class="cell-desc">Next.js static export + managed Azure Functions. East US 2.</td>
+              <td class="cell-desc">Free</td>
               <td><span class="pill pill-green">Live</span></td>
             </tr>
             <tr>
               <td class="cell-name">Azure SQL (Serverless)</td>
-              <td class="cell-desc">Single <code style="font-family:monospace;font-size:.75rem">Sites</code> table —
-                slug, businessName, status, configJson</td>
+              <td><span class="cell-file">—</span></td>
+              <td class="cell-desc">Single <code style="font-family:monospace;font-size:.72rem">Sites</code> table. 2 rows in DB (mariscos-reny, test).</td>
               <td class="cell-desc">~$0 idle</td>
               <td><span class="pill pill-green">Live</span></td>
             </tr>
             <tr>
               <td class="cell-name">Apify</td>
-              <td class="cell-desc"><code
-                  style="font-family:monospace;font-size:.75rem">compass/crawler-google-places</code> actor</td>
+              <td><span class="cell-file">compass/crawler-google-places</span></td>
+              <td class="cell-desc">Actor for bulk Google Maps scraping.</td>
               <td class="cell-desc">Pay-per-run</td>
-              <td><span class="pill pill-green">Live</span></td>
+              <td><span class="pill pill-green">Configured</span></td>
             </tr>
             <tr>
               <td class="cell-name">OpenRouter</td>
-              <td class="cell-desc">DeepSeek V3 — site generation + chatbot</td>
+              <td><span class="cell-file">deepseek/deepseek-chat</span></td>
+              <td class="cell-desc">DeepSeek V3 — site generation + chatbot. Verified returning Spanish responses.</td>
               <td class="cell-desc">Pay-per-token</td>
               <td><span class="pill pill-green">Live</span></td>
             </tr>
@@ -850,23 +897,12 @@
         </table>
       </div>
 
-      <div class="callout ok">
-        <span class="callout-icon">✅</span>
+      <div class="callout error">
+        <span class="callout-icon">⚠️</span>
         <div class="callout-text">
-          <strong>Apify Actor Applied</strong>
-          The code now uses <code>compass/crawler-google-places</code> as requested. This actor provides deep crawling
-          of Google Places results.
-        </div>
-      </div>
-
-      <div class="callout error" style="margin-top:.75rem">
-        <span class="callout-icon">🔐</span>
-        <div class="callout-text">
-          <strong>Auth Level Warning</strong>
-          <code>findLeads</code>, <code>generateSite</code>, and <code>getSites</code> use
-          <code>authLevel: 'function'</code>. Azure SWA does NOT automatically inject function keys for browser fetch
-          calls. If admin dashboard returns 401 in production, change to <code>authLevel: 'anonymous'</code> and protect
-          <code>/admin</code> via SWA auth instead.
+          <strong>No CI/CD Pipeline</strong>
+          Deployments are manual via SWA CLI. No GitHub Actions. The SWA resource has <code>repositoryUrl: null</code>. After every code change, run:<br />
+          <code>npx @azure/static-web-apps-cli deploy localclaw --deployment-token TOKEN --env production --api-language node --api-version 18</code>
         </div>
       </div>
 
@@ -876,20 +912,17 @@
       </div>
       <div class="schema-block">
         <span class="kw">CREATE TABLE</span> Sites (<br />
-        &nbsp;&nbsp;<span class="pk">slug</span> <span class="ty">NVARCHAR(255)</span> <span class="kw">PRIMARY
-          KEY</span>,<br />
+        &nbsp;&nbsp;<span class="pk">slug</span> <span class="ty">NVARCHAR(255)</span> <span class="kw">PRIMARY KEY</span>,<br />
         &nbsp;&nbsp;businessName <span class="ty">NVARCHAR(500)</span> <span class="kw">NOT NULL</span>,<br />
-        &nbsp;&nbsp;status <span class="ty">NVARCHAR(50)</span> <span class="kw">NOT NULL</span>, <span class="cm">--
-          nuevo | generando | listo | contactado | vendido</span><br />
-        &nbsp;&nbsp;configJson <span class="ty">NVARCHAR(MAX)</span> <span class="kw">NOT NULL</span>, <span
-          class="cm">-- full SiteConfig JSON blob</span><br />
+        &nbsp;&nbsp;status <span class="ty">NVARCHAR(50)</span> <span class="kw">NOT NULL</span>, <span class="cm">-- nuevo | generando | listo | contactado | vendido</span><br />
+        &nbsp;&nbsp;configJson <span class="ty">NVARCHAR(MAX)</span> <span class="kw">NOT NULL</span>, <span class="cm">-- full SiteConfig JSON blob</span><br />
         &nbsp;&nbsp;lastUpdated <span class="ty">DATETIME2</span> <span class="kw">DEFAULT</span> GETDATE()<br />
         )
       </div>
 
       <!-- Required env vars -->
       <div class="section-label" style="margin-top:2rem">
-        <h2 style="font-size:.9rem">Required Environment Variables</h2>
+        <h2 style="font-size:.9rem">Environment Variables (all set in Azure SWA Configuration)</h2>
       </div>
       <div class="table-wrap">
         <table>
@@ -903,41 +936,38 @@
           <tbody class="env-row">
             <tr>
               <td>OPENROUTER_API_KEY</td>
-              <td class="cell-desc">API (local.settings.json + Azure config)</td>
-              <td class="cell-desc">sk-or-... from openrouter.ai</td>
+              <td class="cell-desc">API + Azure SWA config</td>
+              <td class="cell-desc">sk-or-... from openrouter.ai. <span class="pill pill-green" style="font-size:.6rem">Set</span></td>
             </tr>
             <tr>
               <td>APIFY_API_KEY</td>
-              <td class="cell-desc">API (local.settings.json + Azure config)</td>
-              <td class="cell-desc">From console.apify.com</td>
+              <td class="cell-desc">API + Azure SWA config</td>
+              <td class="cell-desc">From console.apify.com. <span class="pill pill-green" style="font-size:.6rem">Set</span></td>
             </tr>
             <tr>
               <td>SQL_USER</td>
-              <td class="cell-desc">API (local.settings.json + Azure config)</td>
-              <td class="cell-desc">Azure SQL username</td>
+              <td class="cell-desc">API + Azure SWA config</td>
+              <td class="cell-desc">Azure SQL username. <span class="pill pill-green" style="font-size:.6rem">Set</span></td>
             </tr>
             <tr>
               <td>SQL_PASSWORD</td>
-              <td class="cell-desc">API (local.settings.json + Azure config)</td>
-              <td class="cell-desc">Azure SQL password</td>
+              <td class="cell-desc">API + Azure SWA config</td>
+              <td class="cell-desc">Azure SQL password. <span class="pill pill-green" style="font-size:.6rem">Set</span></td>
             </tr>
             <tr>
               <td>SQL_SERVER</td>
-              <td class="cell-desc">API (local.settings.json + Azure config)</td>
-              <td class="cell-desc">e.g. server.database.windows.net</td>
+              <td class="cell-desc">API + Azure SWA config</td>
+              <td class="cell-desc">e.g. server.database.windows.net. <span class="pill pill-green" style="font-size:.6rem">Set</span></td>
             </tr>
             <tr>
               <td>SQL_DATABASE</td>
-              <td class="cell-desc">API (local.settings.json + Azure config)</td>
-              <td class="cell-desc">Database name</td>
+              <td class="cell-desc">API + Azure SWA config</td>
+              <td class="cell-desc">Database name. <span class="pill pill-green" style="font-size:.6rem">Set</span></td>
             </tr>
             <tr>
               <td>NEXT_PUBLIC_API_URL</td>
-              <td class="cell-desc">Web (.env.local only — local dev)</td>
-              <td class="cell-desc">Set to <code
-                  style="font-family:monospace;font-size:.75rem">http://localhost:7071/api</code> for local. Do NOT set
-                in Azure — defaults to <code style="font-family:monospace;font-size:.75rem">/api</code> which SWA
-                proxies automatically.</td>
+              <td class="cell-desc">Azure SWA config (local only: <code style="font-family:monospace;font-size:.72rem">apps/web/.env.local</code>)</td>
+              <td class="cell-desc">Set to <code style="font-family:monospace;font-size:.72rem">/api</code> in Azure — SWA proxies automatically. Local: <code style="font-family:monospace;font-size:.72rem">http://localhost:7071/api</code>. <span class="pill pill-green" style="font-size:.6rem">Set</span></td>
             </tr>
           </tbody>
         </table>
@@ -964,8 +994,7 @@
             <tr>
               <td><span class="pill pill-gray">Pending</span></td>
               <td class="cell-name">Email Outreach</td>
-              <td class="cell-desc">Resend integration — auto-send preview link to business owners after site is
-                generated.</td>
+              <td class="cell-desc">Resend integration — auto-send preview link to business owners after site is generated.</td>
             </tr>
             <tr>
               <td><span class="pill pill-gray">Pending</span></td>
@@ -975,9 +1004,12 @@
             <tr>
               <td><span class="pill pill-blue">Stub exists</span></td>
               <td class="cell-name">Telegram Bot</td>
-              <td class="cell-desc"><code style="font-family:monospace;font-size:.75rem">telegramWebhook.ts</code>
-                deployed but empty. Commands: <code style="font-family:monospace;font-size:.75rem">/buscar</code>, <code
-                  style="font-family:monospace;font-size:.75rem">/construir</code>.</td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">telegramWebhook.ts</code> deployed but empty. Commands: <code style="font-family:monospace;font-size:.72rem">/buscar</code>, <code style="font-family:monospace;font-size:.72rem">/construir</code>.</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-gray">Pending</span></td>
+              <td class="cell-name">GitHub Actions CI/CD</td>
+              <td class="cell-desc">Connect SWA to GitHub repo so every push to <code style="font-family:monospace;font-size:.72rem">main</code> auto-deploys. Currently manual.</td>
             </tr>
           </tbody>
         </table>
@@ -997,8 +1029,7 @@
           <tbody>
             <tr>
               <td class="cell-name">Custom Domains</td>
-              <td class="cell-desc">Automated SSL + domain mapping for paid clients. Middleware stub exists in <code
-                  style="font-family:monospace;font-size:.75rem">middleware.ts</code>.</td>
+              <td class="cell-desc">Automated SSL + domain mapping for paid clients. Middleware stub exists in <code style="font-family:monospace;font-size:.72rem">middleware.ts</code>.</td>
             </tr>
             <tr>
               <td class="cell-name">Client Dashboard</td>
@@ -1020,7 +1051,7 @@
     <!-- ────────────────────────── DEPLOY / TEST ────────────────────────── -->
     <div class="section" id="deploy">
       <div class="section-label">
-        <h2>Running Locally &amp; Testing</h2>
+        <h2>Running Locally &amp; Re-deploying</h2>
       </div>
 
       <div class="table-wrap">
@@ -1033,33 +1064,36 @@
           </thead>
           <tbody>
             <tr>
-              <td><span class="pill pill-blue">1</span></td>
-              <td class="cell-desc">Create <code
-                  style="font-family:monospace;font-size:.75rem">apps/api/local.settings.json</code> with all 6 env vars
-                above (see DEPLOY.md for full template)</td>
+              <td><span class="pill pill-blue">Local 1</span></td>
+              <td class="cell-desc">Create <code style="font-family:monospace;font-size:.72rem">apps/api/local.settings.json</code> with all 6 env vars (see DEPLOY.md)</td>
             </tr>
             <tr>
-              <td><span class="pill pill-blue">2</span></td>
-              <td class="cell-desc">Set <code style="font-family:monospace;font-size:.75rem">apps/web/.env.local</code>
-                → <code
-                  style="font-family:monospace;font-size:.75rem">NEXT_PUBLIC_API_URL=http://localhost:7071/api</code>
-              </td>
+              <td><span class="pill pill-blue">Local 2</span></td>
+              <td class="cell-desc">Set <code style="font-family:monospace;font-size:.72rem">apps/web/.env.local</code> → <code style="font-family:monospace;font-size:.72rem">NEXT_PUBLIC_API_URL=http://localhost:7071/api</code></td>
             </tr>
             <tr>
-              <td><span class="pill pill-blue">3</span></td>
-              <td class="cell-desc">Terminal 1: <code
-                  style="font-family:monospace;font-size:.75rem">cd apps/api && npm start</code></td>
+              <td><span class="pill pill-blue">Local 3</span></td>
+              <td class="cell-desc">Terminal 1: <code style="font-family:monospace;font-size:.72rem">cd apps/api && npm start</code></td>
             </tr>
             <tr>
-              <td><span class="pill pill-blue">4</span></td>
-              <td class="cell-desc">Terminal 2: <code
-                  style="font-family:monospace;font-size:.75rem">cd apps/web && npm run dev</code></td>
+              <td><span class="pill pill-blue">Local 4</span></td>
+              <td class="cell-desc">Terminal 2: <code style="font-family:monospace;font-size:.72rem">cd apps/web && npm run dev</code></td>
             </tr>
             <tr>
-              <td><span class="pill pill-blue">5</span></td>
-              <td class="cell-desc">Open <code
-                  style="font-family:monospace;font-size:.75rem">http://localhost:3000/admin</code> → Scrape → Generate
-                → Preview site → Test chatbot</td>
+              <td><span class="pill pill-blue">Local 5</span></td>
+              <td class="cell-desc">Open <code style="font-family:monospace;font-size:.72rem">http://localhost:3000/admin</code> → Scrape → Generate → Preview site → Test chatbot</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">Deploy 1</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">cd apps/web && npm run build</code> (outputs to <code style="font-family:monospace;font-size:.72rem">apps/web/out/</code>)</td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">Deploy 2</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">cd apps/api && npm run build</code></td>
+            </tr>
+            <tr>
+              <td><span class="pill pill-green">Deploy 3</span></td>
+              <td class="cell-desc"><code style="font-family:monospace;font-size:.72rem">cd Resell && npx @azure/static-web-apps-cli deploy localclaw --deployment-token TOKEN --env production --api-language node --api-version 18</code></td>
             </tr>
           </tbody>
         </table>
@@ -1068,22 +1102,21 @@
       <div class="callout ok" style="margin-top:1rem">
         <span class="callout-icon">✅</span>
         <div class="callout-text">
-          <strong>What to verify on first run</strong>
-          Scraping returns results → leads appear in table → GENERAR produces a site at <code>/sites/[slug]</code> →
-          chatbot responds in Spanish with business context.
+          <strong>What to verify after deploy</strong>
+          Admin loads existing sites → Scraping returns results → leads appear in table → GENERAR produces a site at <code>/sites/view?slug=</code> → chatbot responds in Spanish with business context.
         </div>
       </div>
       <div class="callout info" style="margin-top:.75rem">
         <span class="callout-icon">📄</span>
         <div class="callout-text">
           <strong>Full deploy guide</strong>
-          See <code>docs/DEPLOY.md</code> for the complete Azure SWA deployment walkthrough and GitHub Actions setup.
+          See <code>docs/DEPLOY.md</code> for the complete Azure SWA walkthrough. Get deployment token from: <code>az staticwebapp secrets list --name swa-localclaw-mx --query "properties.apiKey" -o tsv</code>
         </div>
       </div>
     </div>
 
     <footer>
-      LocalClaw MX &nbsp;·&nbsp; Generated Feb 16, 2026 &nbsp;·&nbsp; Phase 1 complete
+      LocalClaw MX &nbsp;·&nbsp; Updated Feb 17, 2026 &nbsp;·&nbsp; Phase 1 complete &nbsp;·&nbsp; 2 sites live in DB
     </footer>
 
   </div>
