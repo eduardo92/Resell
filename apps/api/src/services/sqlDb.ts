@@ -54,8 +54,16 @@ export class SqlDbService {
                     businessName NVARCHAR(500) NOT NULL,
                     status NVARCHAR(50) NOT NULL,
                     configJson NVARCHAR(MAX) NOT NULL,
+                    rawScrapedData NVARCHAR(MAX),
                     lastUpdated DATETIME2 DEFAULT GETDATE()
                 )
+            END
+            ELSE
+            BEGIN
+                IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Sites') AND name = 'rawScrapedData')
+                BEGIN
+                    ALTER TABLE Sites ADD rawScrapedData NVARCHAR(MAX);
+                END
             END
         `;
         await this.executeQuery(createTableQuery);
@@ -69,35 +77,47 @@ export class SqlDbService {
                 SET businessName = @businessName, 
                     status = @status, 
                     configJson = @configJson, 
+                    rawScrapedData = ISNULL(@rawScrapedData, rawScrapedData),
                     lastUpdated = GETDATE()
                 WHERE slug = @slug
             END
             ELSE
             BEGIN
-                INSERT INTO Sites (slug, businessName, status, configJson, lastUpdated)
-                VALUES (@slug, @businessName, @status, @configJson, GETDATE())
+                INSERT INTO Sites (slug, businessName, status, configJson, rawScrapedData, lastUpdated)
+                VALUES (@slug, @businessName, @status, @configJson, @rawScrapedData, GETDATE())
             END
         `;
         await this.executeQuery(query, [
             { name: 'slug', type: sql.NVarChar(255), value: site.slug },
             { name: 'businessName', type: sql.NVarChar(500), value: site.businessName },
             { name: 'status', type: sql.NVarChar(50), value: site.status },
-            { name: 'configJson', type: sql.NVarChar(sql.MAX), value: JSON.stringify(site) }
+            { name: 'configJson', type: sql.NVarChar(sql.MAX), value: JSON.stringify(site) },
+            { name: 'rawScrapedData', type: sql.NVarChar(sql.MAX), value: site.rawScrapedData ? JSON.stringify(site.rawScrapedData) : null }
         ]);
     }
 
     public async getAllSites() {
-        const query = "SELECT configJson FROM Sites ORDER BY lastUpdated DESC";
+        const query = "SELECT configJson, rawScrapedData FROM Sites ORDER BY lastUpdated DESC";
         const result = await this.executeQuery(query);
-        return result.recordset.map(r => JSON.parse(r.configJson));
+        return result.recordset.map(r => {
+            const config = JSON.parse(r.configJson);
+            if (r.rawScrapedData) {
+                config.rawScrapedData = JSON.parse(r.rawScrapedData);
+            }
+            return config;
+        });
     }
 
     public async getSiteBySlug(slug: string) {
-        const query = "SELECT configJson FROM Sites WHERE slug = @slug";
+        const query = "SELECT configJson, rawScrapedData FROM Sites WHERE slug = @slug";
         const result = await this.executeQuery(query, [
             { name: 'slug', type: sql.NVarChar(255), value: slug }
         ]);
         if (result.recordset.length === 0) return null;
-        return JSON.parse(result.recordset[0].configJson);
+        const config = JSON.parse(result.recordset[0].configJson);
+        if (result.recordset[0].rawScrapedData) {
+            config.rawScrapedData = JSON.parse(result.recordset[0].rawScrapedData);
+        }
+        return config;
     }
 }

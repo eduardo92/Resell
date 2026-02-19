@@ -39,34 +39,45 @@ export async function findLeads(request: HttpRequest, context: InvocationContext
         // The scraper stores address in content.contactPhone fallback, so we compare by slug-friendly name only when address is unavailable.
         const existingLeads = existingResources.map((r: any) => ({
             name: r.businessName,
-            address: r.content?.address || r.content?.contactPhone || ''
+            address: r.rawScrapedData?.address || r.content?.address || ''
         }));
 
         const deduplicated = scraper.deduplicateLeads(leads, existingLeads as any);
 
-        context.log(`Found ${leads.length} leads, ${deduplicated.length} after deduplication.`);
+        // Filter out leads that already have a website to focus on those who need one
+        const leadsWithoutWebsite = deduplicated.filter(lead => !lead.website);
+
+        context.log(`Found ${leads.length} leads, ${deduplicated.length} after deduplication, ${leadsWithoutWebsite.length} without website.`);
+
+        const detectTemplate = (category: string = ''): 'restaurant-v1' | 'plumber-v1' | 'generic-v1' => {
+            const c = category.toLowerCase();
+            if (/restaur|comida|taco|pizza|sushi|caf[eé]|buffet|mariscos|panadería|pastelería|tortill|fonda|taquería|cocina|hamburgues|antojitos/.test(c)) return 'restaurant-v1';
+            if (/plomer|fontaner|eléctric|electric|gas|técnic|reparaci|mantenimi|instalaci|hvac|aire acond|chapister|pintur|construc|albañil|herrería|cerrajer|carpinter/.test(c)) return 'plumber-v1';
+            return 'generic-v1';
+        };
 
         // Save leads as initial SiteConfig objects with 'nuevo' status
-        const savePromises = deduplicated.map(lead => {
+        const savePromises = leadsWithoutWebsite.map(lead => {
             const slug = slugify(lead.name);
             return db.upsertSite({
                 id: slug,
                 slug: slug,
                 businessName: lead.name,
-                templateId: lead.category?.toLowerCase().includes('rest') ? 'restaurant-v1' : 'generic-v1',
-                colors: { primary: '#6366f1', secondary: '#f8fafc' }, // Default colors
+                templateId: detectTemplate(lead.category),
+                colors: { primary: '#6366f1', secondary: '#f8fafc' },
                 content: {
                     heroTitle: lead.name,
                     heroSubtitle: lead.category || 'Negocio Local',
                     aboutText: lead.description || 'Impulsamos tu negocio con tecnología.',
                     services: [lead.category || 'Servicio Profesional'],
-                    contactEmail: lead.website || '',
+                    contactEmail: `contacto@${slug}.mx`,
                     contactPhone: lead.phone || '',
                     address: lead.address || ''
                 },
                 hasExistingWebsite: !!lead.website,
                 status: 'nuevo',
-                lastUpdated: new Date().toISOString()
+                lastUpdated: new Date().toISOString(),
+                rawScrapedData: lead.raw
             });
         });
 

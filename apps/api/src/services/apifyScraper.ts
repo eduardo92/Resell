@@ -10,6 +10,7 @@ export interface ScrapedBusiness {
     description?: string;
     reviewsCount?: number;
     rating?: number;
+    raw?: any;
 }
 
 export class ApifyScraperService {
@@ -39,12 +40,12 @@ export class ApifyScraperService {
             maxQuestions: 0,
             scrapeContacts: false,
             maximumLeadsEnrichmentRecords: 0,
-            maxReviews: 0,
+            maxReviews: 5,
             reviewsSort: "newest",
             reviewsFilterString: "",
             reviewsOrigin: "all",
             scrapeReviewsPersonalData: false,
-            maxImages: 0,
+            maxImages: 10,
             scrapeImageAuthors: false,
             allPlacesNoSearchAction: ""
         };
@@ -62,6 +63,7 @@ export class ApifyScraperService {
                 description: item.description,
                 reviewsCount: item.reviewsCount,
                 rating: item.totalScore || item.stars,
+                raw: item
             }));
         } catch (error) {
             console.error('Error in ApifyScraperService:', error);
@@ -70,13 +72,15 @@ export class ApifyScraperService {
     }
 
     async scrapeSingleUrl(url: string): Promise<ScrapedBusiness | null> {
-        // Using crawler-google-places with a specific start URL
+        // Use startUrls for direct Google Maps URL input
         const input = {
-            searchStringsArray: [url], // Scrapers usually resolve URLs in search
+            startUrls: [{ url }],
             maxCrawledPlacesPerSearch: 1,
             language: "es",
             scrapePlaceDetailPage: true,
-            // ... rest of defaults to stay consistent
+            maxImages: 10,
+            maxReviews: 5,
+            scrapeImageAuthors: false,
         };
 
         try {
@@ -95,6 +99,7 @@ export class ApifyScraperService {
                 description: item.description,
                 reviewsCount: item.reviewsCount,
                 rating: item.totalScore || item.stars,
+                raw: item
             };
         } catch (error) {
             console.error('Error scraping single URL:', error);

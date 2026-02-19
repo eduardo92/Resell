@@ -13,6 +13,8 @@ export interface SiteConfig {
         theme?: 'light' | 'dark' | 'glass';
         brandPersonality?: string;
         toneOfVoice?: string;
+        heroImage?: string;
+        gallery?: string[];
     };
     content: {
         heroTitle: string;
@@ -22,10 +24,29 @@ export interface SiteConfig {
         contactEmail: string;
         contactPhone: string;
         address?: string;
+        businessHours?: {
+            [key: string]: string;
+        };
+        testimonials?: Array<{
+            name: string;
+            text: string;
+            rating: number;
+        }>;
+        faqs?: Array<{
+            question: string;
+            answer: string;
+        }>;
+        features?: Array<{
+            title: string;
+            description: string;
+            icon?: string;
+        }>;
+        googlePlaceId?: string;
     };
     hasExistingWebsite: boolean;
     status: 'nuevo' | 'generando' | 'listo' | 'contactado' | 'vendido';
     lastUpdated: string;
+    rawScrapedData?: any;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
